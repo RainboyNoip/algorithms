@@ -1,0 +1,14 @@
+#!/bin/env python3
+import os
+from os import path,listdir
+PATH = path.abspath(path.dirname(__file__))
+lis = []
+for _file in (listdir(PATH)):
+    # mode = os.stat( path.join(PATH,_file)).st_mode
+    # print(stat.S_IEXEC)
+    # if stat.S_IEXEC(mode):
+        # print(_file)
+    ret = os.access(os.path.join(PATH,_file),os.X_OK)
+    if ret:
+        lis.append(_file)
+print("    ".join(lis))

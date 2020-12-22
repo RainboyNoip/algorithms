@@ -1,0 +1,56 @@
+#!/bin/env python3
+# 作用
+# 展示输入文件INPUT 的内容 并输出 程序1 说程序2 的运行结果
+
+import argparse
+import os
+import sys
+
+parser = argparse.ArgumentParser(description="展示,对比")
+parser.add_argument("file_name",help="编译的代码文件名",nargs="?")
+parser.add_argument("-o","--output",help="编译输出的程序名")
+parser.add_argument("-i","--in",help="输入的文件名",default="in")
+parser.add_argument("-v","--verbose",help="显示详细信息",action='store_true')
+ARGS = vars(parser.parse_args())
+
+def verbose(*args,**kwargs):
+    if ARGS["verbose"]:
+        print(*args,**kwargs,end="",file=sys.stderr)
+
+#print(ARGS)
+# 没有指定文件名
+if not ARGS["file_name"]:
+    verbose("没有指定代码名,当前目录下的源代码为: ")
+    cpplist = sorted(list(filter(lambda x: x.endswith(".cpp"),os.listdir())))
+    if len(cpplist) == 0:
+        verbose("空,退出\n")
+        sys.exit(1)
+    verbose("  ".join(cpplist)+"\n")
+    ARGS["file_name"] = cpplist[0]
+
+# 没有指定编译输出
+if not ARGS["output"]:
+    ARGS["output"] = os.path.splitext(ARGS["file_name"])[0]
+
+verbose("编译的代码 %s\n" % ARGS["file_name"])
+verbose("编译为: %s\n" % ARGS["output"])
+if not ARGS["verbose"]:
+    print("[{file_name}] ====> [{output}]".format(**ARGS),file=sys.stderr)
+
+
+compile_args = ["g++","-DDEBUG","-DLOCAL","-include","/home/rainboy/mycode/noi_tools/cpp_tools.h","-g","-o","{output}","{file_name}"]
+verbose("编译参数为:\n")
+verbose(" ".join(compile_args).format(**ARGS)+"\n")
+sys.stderr.flush()
+
+os.system(" ".join(compile_args).format(**ARGS))
+
+
+# 检查输入数据
+
+if not os.path.exists(ARGS["in"]):
+    print("没有找到数据文件 %s,退出\n" % ARGS["in"],file=sys.stderr)
+    sys.exit(1)
+print("./{output} < {in}".format(**ARGS),file=sys.stderr)
+sys.stderr.flush()
+os.system("./{output} < {in}".format(**ARGS))
