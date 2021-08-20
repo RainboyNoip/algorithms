@@ -38,7 +38,8 @@ if not ARGS["verbose"]:
     print("[{file_name}] ====> [{output}]".format(**ARGS),file=sys.stderr)
 
 
-compile_args = ["g++","-DDEBUG","-DLOCAL","-include","/home/rainboy/mycode/noi_tools/cpp_tools.h","-g","-o","{output}","{file_name}"]
+# compile_args = ["g++","-std=c++20","-DDEBUG","-DLOCAL","-include","/home/rainboy/mycode/noi_tools/cpp_tools.h","-g","-o","{output}","{file_name}"]
+compile_args = ["g++","-std=c++20","-DDEBUG","-DLOCAL","-lpthread","-g","-o","{output}","{file_name}"]
 verbose("编译参数为:\n")
 verbose(" ".join(compile_args).format(**ARGS)+"\n")
 sys.stderr.flush()
@@ -49,8 +50,9 @@ os.system(" ".join(compile_args).format(**ARGS))
 # 检查输入数据
 
 if not os.path.exists(ARGS["in"]):
-    print("没有找到数据文件 %s,退出\n" % ARGS["in"],file=sys.stderr)
-    sys.exit(1)
-print("./{output} < {in}".format(**ARGS),file=sys.stderr)
-sys.stderr.flush()
-os.system("./{output} < {in}".format(**ARGS))
+    print("没有找到数据文件 %s,直接执行\n" % ARGS["in"],file=sys.stderr)
+    os.system("./{output} ".format(**ARGS))
+else:
+    print("./{output} < {in}".format(**ARGS),file=sys.stderr)
+    sys.stderr.flush()
+    os.system("./{output} < {in}".format(**ARGS))
