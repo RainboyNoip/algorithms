@@ -21,6 +21,8 @@
 #include <chrono>
 #include <iomanip>
 
+#include <algo/base.hpp>
+
 
 namespace __MY_SELF__NAMESPACE__ {
 
@@ -43,4 +45,4 @@ namespace __MY_SELF__NAMESPACE__ {
             std::clock_t _start_time,_end_time;
             std::chrono::time_point<std::chrono::high_resolution_clock> _Wall_start,_Wall_end;
     };
-}
+} //namespace __MY_SELF__NAMESPACE__

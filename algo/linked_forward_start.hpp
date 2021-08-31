@@ -6,6 +6,8 @@
 #include <iostream>
 
 
+namespace __MY_SELF__NAMESPACE__ {
+
 /**
 * 说明:不可以有编号为0的点
 * 使用: TODO
@@ -58,3 +60,5 @@ struct linkedForwardStar {
         return Itertor{head[__vex]};
     }
 };
+
+} //namespace __MY_SELF__NAMESPACE__
