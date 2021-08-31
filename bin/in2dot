@@ -1,0 +1,46 @@
+#!/bin/env python3
+# 将多行数据转换成对应的dot样式
+
+# 1 2 3
+# 1 2 3
+# 1 2
+# 1 2 3
+# 1 2
+# =>
+# 1--2[label="3"];
+# 1--2[label="3"];
+# 1--2;
+# 1--2[label="3"];
+# 1--2;
+
+# 参数
+# . -d -directory 有方向图
+
+import sys
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-d',action="store_true",help="有向图")
+args = parser.parse_args()
+
+template = '''graph g {{
+    node[shape=circle fixedsize=true style=filled fillcolor=white colorscheme=accent8 ];
+    {content}
+}}
+'''
+content="" 
+
+lines= sys.stdin.readlines()
+for l in lines:
+    ll = l.split()
+    if len(ll)>=3:
+        content += ("{}--{}[label=\"{}\"];\n".format(ll[0],ll[1],ll[2]))
+    else:
+        content += ("{}--{};\n".format(ll[0],ll[1]))
+
+if args.d:
+    content = content.replace("--","->")
+    template = "di"+template
+
+print(template.format(content=content))
+
