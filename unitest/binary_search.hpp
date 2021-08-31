@@ -18,7 +18,9 @@ void test_binary_search (){
     //for(int i=0;i<=9;++i) std::cout << a[i] << " ";
     //std::cout  << std::endl;
 
-    auto it = bs(a,a+9+1,a[5]);
+    auto it = bs(a,a+9+1,[&a](int t){
+            return t < a[5];
+            });
     //std::cout << a[5] << std::endl;
     //std::cout << (it - a) << std::endl ;
     auto idx = a+0;
@@ -28,13 +30,7 @@ void test_binary_search (){
         }
     ASSERT_EQUALS(idx,it);
 
-    auto it2 = bs(a,a+9+1,a[5],std::less_equal<int> ());
-    for(int i=0;i<=10;++i) //找到第一个不符合 默认条件的数
-        if( i == 10 or not std::less_equal<int>{}(a[i],a[5])) {
-            idx = a+i;break;
-        }
 
-    ASSERT_EQUALS(idx,it2);
-
+    //ASSERT_EQUALS(idx,it3);
 
 }
