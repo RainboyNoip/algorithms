@@ -1,36 +1,22 @@
-/*
- *   noiCppUtils, some helpful cpp utils for noi/acm user
- *    Copyright (C) 2020-2021  Rainboy
- *
- *    This program is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
- *
- *    This program is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
- *
- *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
 #pragma once
 #include <random>
 
-namespace noiCppUtils {
-    class random{
-        public:
-            random(){}
-            random(int ,int);
-                //:dis(std::uniform_int_distribution<int> (l,r)){}
-            int operator()();
-        private:
-            std::random_device rd;
-            std::mt19937 rnd{rd()};
-            std::uniform_int_distribution<int>  dis;
-    };
-}
+#include <algo/base.hpp>
 
+namespace __MY_SELF__NAMESPACE__ {
+    struct Random {
+        using ll = long long;
+        std::random_device rd;
+        std::mt19937 engine{rd()};
+        std::uniform_int_distribution<long long> dis; // in [0,0x7fffffffffffffff]
+        Random(){}
+        Random(ll l,ll r){ dis = std::uniform_int_distribution<long long> (l,r); }
+
+        int operator()(){ return dis(engine); }
+        ll operator()(ll l,ll r){ return l == r ? l : dis(engine) % ( r-l+1 ) + l; }
+
+        //Random create(ll l,ll r){ return Random(l,r); } //工厂模式
+    } /*RND*/;
+}
 
 
