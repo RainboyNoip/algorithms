@@ -21,10 +21,28 @@
 
 #pragma once
 
+#include <iostream>
+
 #define __MY_SELF__NAMESPACE__ rainboy
+
+namespace __MY_SELF__NAMESPACE__ {
+
 
 #define log(...) { \
     fprintf(stderr,"In [ %s ],At line [ %d ]\n",__func__,__LINE__); \
     fprintf(stderr,__VAR_ARGS__); \
     fprintf(stderr,"\n"); \
 }
+
+// 加上 std::cin std::cout
+//[（acm）C++加速输入的几种方法_hebtu666-CSDN博客](https://blog.csdn.net/hebtu666/article/details/107269428)
+struct quick_io {
+    quick_io(){
+	    std::ios::sync_with_stdio(false);
+        std::cin.tie(nullptr);
+    }
+};
+
+
+
+} //namespace __MY_SELF__NAMESPACE__
