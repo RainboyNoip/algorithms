@@ -20,6 +20,9 @@
  * */
 
 #pragma once
+
+#define __MY_SELF__NAMESPACE__ rainboy
+
 #define log(...) { \
     fprintf(stderr,"In [ %s ],At line [ %d ]\n",__func__,__LINE__); \
     fprintf(stderr,__VAR_ARGS__); \
