@@ -39,7 +39,15 @@ if not ARGS["verbose"]:
 
 
 # compile_args = ["g++","-std=c++20","-DDEBUG","-DLOCAL","-include","/home/rainboy/mycode/noi_tools/cpp_tools.h","-g","-o","{output}","{file_name}"]
-compile_args = ["g++","-std=c++20","-DDEBUG","-DLOCAL","-lpthread","-g","-o","{output}","{file_name}"]
+__cplusplus = os.popen("g++ -x c++ -E -dM -< /dev/null |grep __cplusplus").read()
+cppVersion = "C++98"
+vers = [ ("1997","c++98"), ("2011","c++11"), ("2013","c++13"), ("2017","c++17"), ("2020","c++20") ]
+for [ver,std] in vers:
+    if __cplusplus.find(ver) >=0:
+        cppVersion = std
+        break;
+
+compile_args = ["g++","-std="+std,"-DDEBUG","-DLOCAL","-lpthread","-g","-o","{output}","{file_name}"]
 verbose("编译参数为:\n")
 verbose(" ".join(compile_args).format(**ARGS)+"\n")
 sys.stderr.flush()
