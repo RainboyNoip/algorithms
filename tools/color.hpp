@@ -57,4 +57,20 @@ const Modifier bg_green   = BG_GREEN   ;
 const Modifier bg_blue    = BG_BLUE    ;
 const Modifier bg_default = BG_DEFAULT ;
 
+// =========== table 
+// 实现的功能
+// add_row {"string",long long,double}
+// Itertor cloumn(), row
+// center, align left ,right ,
+// change bg_color,fg_color
+// change_value
+// copy ctor
+class Table {
+public:
+    Table& add_row();
+};
+
+// =========== table end
+
+
 } //namespace __MY_SELF__NAMESPACE__
