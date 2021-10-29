@@ -10,6 +10,16 @@
 #include <vector>
 #include <iostream>
 
+#include "color.hpp"
+
+// =========== table 
+// 实现的功能
+// add_row {"string",long long,double}
+// Itertor cloumn(), row
+// center, align left ,right ,
+// change bg_color,fg_color
+// change_value
+// copy ctor
 namespace Tools {
     using namespace std;
 

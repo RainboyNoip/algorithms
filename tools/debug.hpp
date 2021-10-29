@@ -1,6 +1,13 @@
+#pragma once
 #include "table.hpp"
 
 #define tdbg(...) Tools::table_debug(#__VA_ARGS__,__VA_ARGS__)
+/**
+ * int x=1,y=2,z=3;
+ * tdbg(x,y,z);
+ * --> print
+ *  
+ */
 
 namespace Tools {
 

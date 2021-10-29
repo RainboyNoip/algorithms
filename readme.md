@@ -8,13 +8,13 @@
 
 ## 约定 ( Convention ):
 
-   1. 一个算法用一个`.hpp`文件表示放到include下. ( one .header file per algorithm. )
-   2. 算法演示的demo程序放到src下.  ( one demo per algorithm.  )
-   3. TAB = 4 space.  set ts=4 in vim
-   4. Graph的输出格式为 [Graphviz](http://www.graphviz.org/) Dot格式.  (the output format of the graph is in dot of graphviz.)
-   5. 易用 easy to use
-   6. 代码即文档： 只需要看代码(或代码注释)就可以学会如何使用
-   7. 头文件提供源码：只用包含头文件即可使用
+1. 一个算法用一个`.hpp`文件表示放到include下. ( one .header file per algorithm. )
+2. 算法演示的demo程序放到src下.  ( one demo per algorithm.  )
+3. TAB = 4 space.  set ts=4 in vim
+4. Graph的输出格式为 [Graphviz](http://www.graphviz.org/) Dot格式.  (the output format of the graph is in dot of graphviz.)
+5. 易用 easy to use
+6. 代码即文档： 只需要看代码(或代码注释)就可以学会如何使用
+7. 头文件提供源码：只用包含头文件即可使用
 
 ## 安装与更新
 
@@ -37,6 +37,7 @@ export PATH=$PATH:$HOME/.algorithms/bin
 sudo apt install graphviz
 ```
 
+
 bin目录下的工具有 TODO
 ```plaintext
 bin
@@ -49,3 +50,15 @@ bin
 ├── randint.py
 └── r_test.js
 ```
+
+## 文档
+
+1. 先看`examples/`的代码
+2. 再看碟对应的源代码，代码即文档
+
+功能分类
+
+ - debug 调试
+ - algo
+    - algorithm 算法
+    - math 数学

@@ -47,7 +47,9 @@ if not ARGS["verbose"]:
         # cppVersion = std
         # break;
 
-compile_args = ["g++","-std=c++17","-DDEBUG","-DLOCAL","-lpthread","-g","-o","{output}","{file_name}"]
+compile_args = ["g++","-std=c++20","-DDEBUG","-DLOCAL",
+        "-include","/home/rainboy/mycode/RainboyNoip/algorithms/noicpputils.hpp"
+        "-lpthread","-g","-o","{output}","{file_name}"]
 verbose("编译参数为:\n")
 verbose(" ".join(compile_args).format(**ARGS)+"\n")
 sys.stderr.flush()
