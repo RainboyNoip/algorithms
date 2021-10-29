@@ -46,9 +46,9 @@ if not ARGS["verbose"]:
     # if __cplusplus.find(ver) >=0:
         # cppVersion = std
         # break;
-
+noicpputils_hpp_path = os.path.join( os.path.dirname(__file__),"../noicpputils.hpp")
 compile_args = ["g++","-std=c++20","-DDEBUG","-DLOCAL",
-        "-include","/home/rainboy/mycode/RainboyNoip/algorithms/noicpputils.hpp"
+        "-include",noicpputils_hpp_path,
         "-lpthread","-g","-o","{output}","{file_name}"]
 verbose("编译参数为:\n")
 verbose(" ".join(compile_args).format(**ARGS)+"\n")
