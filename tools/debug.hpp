@@ -1,6 +1,8 @@
 #pragma once
 #include "table.hpp"
 
+#define gbg_one(one)   std::cerr << #one " = " << one << std::endl
+#define tgbg_one(one)  std::cerr << Tools::Table (#one,one) << std::endl
 #define tdbg(...) Tools::table_debug(#__VA_ARGS__,__VA_ARGS__)
 /**
  * int x=1,y=2,z=3;

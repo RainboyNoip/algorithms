@@ -46,8 +46,15 @@ namespace Tools {
 
     class Table {
     public:
+        Table() = default;
         template<typename... Args>
-        void add_row(Args... args){
+        Table(Args... args){
+             add_row(std::forward<Args>(args)...);
+        }
+
+        template<typename... Args>
+        std::enable_if_t<sizeof...(Args)>
+        add_row(Args... args){
             table_.emplace_back();
             ((table_.back().emplace_back(std::forward<Args>(args))),...);
         }
@@ -61,7 +68,12 @@ namespace Tools {
             }
         }
 
-        void print(){
+        friend std::ostream& operator<<(std::ostream& __o,const Table &t) {
+            t.print(__o);
+            return __o;
+        }
+
+        void print(std::ostream& __o = std::cerr) const{
             auto rows_cnt = table_.size();
             auto cols_cnt = rows_cnt == 0 ? : table_.front().size();
             std::vector<int> cols_length;
@@ -78,10 +90,10 @@ namespace Tools {
             }
             auto print_row_table_border = [&](){
                 for (const auto& e : cols_length) {
-                    std::cout<< conner;
-                    for(int i=1;i<=e;++i) std::cout << row_ch;
+                    __o << conner;
+                    for(int i=1;i<=e;++i) __o << row_ch;
                 }
-                std::cout<< conner <<'\n';
+                __o << conner <<'\n';
             };
             auto print_row_table_cell = [&](int line){
                 for(int i=0;i<table_[line].size();++i){
@@ -89,12 +101,12 @@ namespace Tools {
                     int space_size = cols_length[i]  - cell_.lenght();
                     int left = space_size >> 1;
                     int right = space_size - left;
-                    std::cout <<  col_ch;
-                    for(int i=1;i<=left;++i) std::cout << ' ' ;
-                    std::cout << cell_ ;
-                    for(int i=1;i<=right;++i) std::cout << ' ' ;
+                    __o <<  col_ch;
+                    for(int i=1;i<=left;++i) __o << ' ' ;
+                    __o << cell_ ;
+                    for(int i=1;i<=right;++i) __o << ' ' ;
                 }
-                std::cout <<  col_ch << '\n';
+                __o <<  col_ch << '\n';
             };
 
             for(int i=1;i<=rows_cnt;++i){
