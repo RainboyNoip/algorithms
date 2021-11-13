@@ -4,7 +4,7 @@ int main(){
     tdbg(x,y,z);
 
     std::string str{"hello world"};
-    gbg_one(str);
-    tgbg_one(str);
+    dbg_one(str);
+    tdbg_one(str);
     return 0;
 }
