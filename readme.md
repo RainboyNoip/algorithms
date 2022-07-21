@@ -1,3 +1,12 @@
+# Algorithms
+
+<p align="center">
+    <a alt="c++">
+        <img src="https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white" /></a>
+    <a href="https://www.gnu.org/licenses/gpl-3.0" alt="gpl-3.0">
+        <img src="https://img.shields.io/github/license/rainboyNoip/algorithms?style=for-the-badge" /></a>
+</p>
+
 ## 目的
 
 受[xtaci/algorithms: Algorithms & Data structures in C++.](https://github.com/xtaci/algorithms) 启发，把写题目用到的算法与数据结构写出来，用于：
@@ -54,7 +63,7 @@ bin
 ## 文档
 
 1. 先看`examples/`的代码
-2. 再看碟对应的源代码，代码即文档
+2. 再看对应的源代码，代码即文档
 
 功能分类
 
