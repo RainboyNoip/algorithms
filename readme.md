@@ -68,6 +68,8 @@ bin
 功能分类
 
 
+- [常用算法](./include/algorithms)
+  - [二分查找](./include/algorithms/binary_search.hpp)
 - [图](./include/graph)
   - [linkList.hpp 链式向量星,图的基本存储](./include/graph/linkList.hpp)
   - [edgeArray.hpp 边集数组](./include/graph/edgeArray.hpp)
