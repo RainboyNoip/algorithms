@@ -75,6 +75,8 @@ bin
 - [图](./include/graph)
   - [linkList.hpp 链式向量星,图的基本存储](./include/graph/linkList.hpp)
   - [edgeArray.hpp 边集数组](./include/graph/edgeArray.hpp)
+  - [bipartile_graph_color.hpp 二分图染色,无奇环判定](./include/graph/bipartile_graph_color.hpp)
+  - [tarjan_scc.hpp 强连通分量](./include/graph/tarjan_scc.hpp)
 
 ```
 include

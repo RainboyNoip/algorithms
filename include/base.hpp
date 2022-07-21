@@ -30,9 +30,11 @@
 #include <algorithm>
 #include <tuple>
 
-#define __MY_SELF__NAMESPACE__ rainboy
 
-namespace __MY_SELF__NAMESPACE__ {
+namespace RALGO {
+
+typedef std::integral_constant<size_t, 1000005> MAXN; // 最多点的数量
+typedef std::integral_constant<size_t, 1000005> MAXE; // 最多边的数量
 
 
 #define log(...) { \

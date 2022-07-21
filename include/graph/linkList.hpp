@@ -137,7 +137,7 @@ public:
 };
 
 
-using linkList = _linkList<1000005,1000005>;
+using linkList = _linkList<MAXN::value,MAXE::value>;
 
 } //namespace __MY_SELF__NAMESPACE__
   //

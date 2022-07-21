@@ -107,7 +107,7 @@ public:
 
 };
 
-using tarjan_scc = _tarjan_scc<1000005, linkList>;
+using tarjan_scc = _tarjan_scc<MAXN::value, linkList>;
 
 } // end namespace RALGO
 
