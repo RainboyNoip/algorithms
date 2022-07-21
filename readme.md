@@ -67,7 +67,24 @@ bin
 
 功能分类
 
- - debug 调试
- - algo
-    - algorithm 算法
-    - math 数学
+```
+include
+├── algorithms 常用算法
+│   └── binary_search.hpp
+├── math 数学
+│   └── bignumber.hpp
+├── tree 树
+│   └── 
+├── graph 图
+│   └── 
+├── utils 工具
+│   └── 
+├── algorithms.hpp
+├── allocator.hpp
+├── base.hpp
+├── linked_forward_start.hpp
+├── math.hpp
+├── random_data.hpp
+├── random.hpp
+└── utils.hpp
+```
