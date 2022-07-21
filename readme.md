@@ -42,8 +42,8 @@ export PATH=$PATH:$HOME/.algorithms/bin
 其它
 
 ```bash
-# 安装graphviz
-sudo apt install graphviz
+# 安装graphviz,xsel
+sudo apt install graphviz xsel
 ```
 
 
@@ -57,7 +57,9 @@ bin
 ├── lsoitools
 ├── oi-show.py
 ├── randint.py
-└── r_test.js
+├── r_test.js
+└── tran2one.py 如果你的代码文件中包含了本库中hpp文件,会把你写的代码和本库中的hpp文件拼接,转换成一个文件,方便提交到oj
+
 ```
 
 ## 文档

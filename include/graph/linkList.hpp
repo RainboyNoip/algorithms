@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "../base.hpp"
+#include "base.hpp"
 
 namespace RALGO {
 

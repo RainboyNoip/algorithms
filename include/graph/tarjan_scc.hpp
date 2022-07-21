@@ -23,7 +23,7 @@
  */
 
 #pragma once
-#include "linkList.hpp"
+#include "graph/linkList.hpp"
 
 namespace RALGO {
 
