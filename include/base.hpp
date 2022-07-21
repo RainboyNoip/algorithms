@@ -1,5 +1,5 @@
 /*
- *   noiCppUtils, some helpful cpp utils for noi/acm user
+ *   rainboyNoip/algorithms, some helpful cpp utils for noi/acm user
  *    Copyright (C) 2020-2021  Rainboy
  *
  *    This program is free software: you can redistribute it and/or modify
@@ -20,8 +20,15 @@
  * */
 
 #pragma once
-
+#include <cstring>
 #include <iostream>
+#include <map>
+#include <vector>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <algorithm>
+#include <tuple>
 
 #define __MY_SELF__NAMESPACE__ rainboy
 
