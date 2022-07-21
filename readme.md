@@ -67,6 +67,11 @@ bin
 
 功能分类
 
+
+- [图](./include/graph)
+  - [linkList.hpp 链式向量星,图的基本存储](./include/graph/linkList.hpp)
+  - [edgeArray.hpp 边集数组](./include/graph/edgeArray.hpp)
+
 ```
 include
 ├── algorithms 常用算法
@@ -76,7 +81,8 @@ include
 ├── tree 树
 │   └── 
 ├── graph 图
-│   └── 
+│   ├── edgeArray.hpp   边集数组
+│   └── linkList.hpp
 ├── utils 工具
 │   └── 
 ├── algorithms.hpp
