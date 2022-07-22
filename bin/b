@@ -30,7 +30,7 @@ if not ARGS["file_name"]:
 
 # 没有指定编译输出
 if not ARGS["output"]:
-    ARGS["output"] = os.path.splitext(ARGS["file_name"])[0]
+    ARGS["output"] = os.path.splitext(ARGS["file_name"])[0] + ".out"
 
 verbose("编译的代码 %s\n" % ARGS["file_name"])
 verbose("编译为: %s\n" % ARGS["output"])
@@ -57,7 +57,7 @@ noicpputils_hpp_path = os.path.join( os.path.dirname(__file__),"../noicpputils.h
 
 compile_args = ["g++","-std="+cppVersion,"-DDEBUG","-DLOCAL",
         "-include",noicpputils_hpp_path,
-        "-lpthread","-g","-o","{output}","{file_name}"]
+        "-g","-o","{output}","{file_name}"]
 
 verbose("编译参数为:\n")
 verbose(" ".join(compile_args).format(**ARGS)+"\n")

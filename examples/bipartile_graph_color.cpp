@@ -10,4 +10,4 @@ int main(){
     std::cout << MAXE::value << std::endl;
     
     return 0;
-}
+
