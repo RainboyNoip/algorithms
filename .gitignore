@@ -33,3 +33,6 @@
 in
 
 unitest/test
+
+*.dot
+*.png
