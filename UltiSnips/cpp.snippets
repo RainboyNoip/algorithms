@@ -1,0 +1,143 @@
+extends c
+#extends base
+#extends math
+#extends tools
+#extends algorithm/graph
+#extends algorithm/search
+#extends algorithm/string
+#extends data_structure
+#extends tools/util.snippets
+
+snippet us "标准命名空间" b
+using namespace ${1:std};
+endsnippet
+
+snippet in "#include" b
+#include <${1:iostream>}
+endsnippet
+
+
+#=================================
+#结构语句
+#=================================
+# if
+snippet if
+if( ${1:/* condition */} ) {
+    ${2}
+}
+endsnippet
+# line if
+snippet lif "line if" b
+if( ${1:/* condition */} ) $0
+endsnippet
+
+# else if
+snippet ei
+else if ( ${1:/* condition */} ) {
+    $1
+}
+endsnippet
+
+snippet lei "line else if" b
+else if( ${1:condition} ) $0
+endsnippet
+
+
+# else
+snippet el "else" b
+else {
+    ${1:TODO}
+}
+endsnippet
+
+snippet lel "line else" b
+else $0
+endsnippet
+
+
+# While Loop
+snippet wh
+while ( ${1:/* condition */} ) {
+    $0
+}
+endsnippet
+
+#line While Loop
+snippet lwh "line while loop" b
+while( ${1:condition} ) $0;
+endsnippet
+
+
+# Do While Loop
+snippet do
+do {
+    ${1}
+} while ( ${0:/* condition */} );
+endsnippet
+
+
+# switch
+snippet sw "switch" b
+switch( ${1:something} ){
+    case ${2:c}:
+		${3:TODO}
+        break;
+    defaul:
+        break;
+}
+endsnippet
+
+# typedef 
+snippet tf "typedef" b
+typedef ${1:typename} ${2:alias};
+endsnippet
+
+
+# typename
+snippet tn "typename" i
+typename ${1:name}
+endsnippet
+
+# template<>
+snippet tem "template<>" b
+template<typename T,${1:typename ${2:name}}>
+endsnippet
+
+# ========================= Class =========================
+
+snippet cla "class" b
+class ${1:name} {
+	$0
+};
+endsnippet
+
+snippet pub "public:" b
+public:
+	$0
+endsnippet
+
+snippet pri "private:" b
+private:
+	$0
+endsnippet
+
+snippet pro "protect:" b
+protect:
+	$0
+endsnippet
+
+snippet try "try catch" b
+try {
+	$0
+}
+catch(std::exception & e){
+    std::cerr << " Exception : " << e.what() << "\n";
+}
+endsnippet
+
+snippet name "namespace" b
+namespace ${1:name} {
+	$0
+} // end namespace $1
+
+endsnippet

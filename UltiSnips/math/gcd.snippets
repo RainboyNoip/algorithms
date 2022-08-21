@@ -1,0 +1,14 @@
+snippet gcd "gcd-递归" b
+int gcd(int a,int b){ if( b == 0) return  a; return gcd( b , a %b); }
+endsnippet
+
+snippet exgcd "exgcd" b
+int exgcd(int a,int b,int &x,int &y){//ax+by=gcd(a,b)
+    if(b==0){x=1,y=0;return a;}
+    int gcd=exgcd(b,a%b,x,y);
+    int tx=x;
+    x=y;
+    y=tx-(a/b)*y;
+    return gcd;
+}
+endsnippet

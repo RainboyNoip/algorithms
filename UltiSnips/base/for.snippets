@@ -1,0 +1,152 @@
+# 
+# 有关for的 snip
+# [I][r][l]f		-> for([int] i=1; i<=n; ++i)
+# [I][r][l]f N		-> for([int] i=1; i<=N; ++i)
+# [I][r][l]f S N	-> for([int] i=S; i<=N; ++i)
+# [I][r][l]fj s n	-> for([int] j=s; i<=N; ++j)
+#
+# l oneline
+# i use int
+# r reverse
+
+global !p
+def forArgument(args,useInt=True,Reverse=False):
+	[name,start,end] = args
+	a = name if name !='' else 'i'
+	b = start if not Reverse else end
+	c = end if not Reverse else start
+	d = '++' + a
+	if Reverse:
+		d = '--' + a
+	compare_flag = '<=' if d[0] =='+' else '>='
+	useInt = "int " if useInt else ""
+	return "{useint}{i}={start};{i}{compare_flag}{end};{inc}".format(useint=useInt,i=a,start=b,end=c,inc=d,compare_flag=compare_flag)
+endglobal
+
+global !p
+def shorForArugments(args,FOR=True):
+	[name,start,end] = args
+	name  = name if name !='' else 'i'
+	start = start if start != '' else '1' if FOR else 'n'
+	end   = end if end != '' else 'n' if FOR else '1'
+	return "{name},{start},{end}".format(name=name,start=start,end=end)
+endglobal
+
+#============================ fi 1 n
+
+# define for i,1,n
+snippet "(I?)(r?)(?<!l)f(\S+) +(\S+) +(\S+) *" "for i,1,n" br
+for(`!p snip.rv=forArgument([match.group(3),match.group(4),match.group(5)],useInt=bool(not match.group(1)),Reverse=bool(match.group(2)))`){
+	$0
+}
+endsnippet
+# define LineFor i,1,n
+snippet "(I?)(r?)lf(\S+) +(\S+) +(\S+) *" "LineFor i,1,n" br
+for(`!p snip.rv=forArgument([match.group(3),match.group(4),match.group(5)],useInt=bool(not match.group(1)),Reverse=bool(match.group(2)))`) $0
+endsnippet
+
+#============================ f 1 n
+
+# define for i,1,n
+snippet "(I?)(r?)(?<!l)f (\S+) +(\S+) *" "for i,1,n" br
+for(`!p snip.rv=forArgument(['i',match.group(3),match.group(4)],useInt=bool(not match.group(1)),Reverse=bool(match.group(2)))`){
+	$0
+}
+endsnippet
+# define Linefor i,1,n
+snippet "(I?)(r?)lf (\S+) +(\S+) *" "for i,1,n" br
+for(`!p snip.rv=forArgument(['i',match.group(3),match.group(4)],useInt=bool(not match.group(1)),Reverse=bool(match.group(2)))`) $0
+endsnippet
+
+
+#============================ fi n
+
+# define for i,[1],n
+snippet "(I?)(r?)(?<!l)f(\S+) +(\S+) *" "for i,[1],n" br
+for(`!p snip.rv=forArgument([match.group(3),'1',match.group(4)],useInt=bool(not match.group(1)),Reverse=bool(match.group(2)))`){
+	$0
+}
+endsnippet
+# define LineFor i,[1],n
+snippet "(I?)(r?)lf(\S+) +(\S+) *" "for i,[1],n" br
+for(`!p snip.rv=forArgument([match.group(3),'1',match.group(4)],useInt=bool(not match.group(1)),Reverse=bool(match.group(2)))`) $0
+endsnippet
+
+
+#============================ fi 
+
+# define for i,[1],[n]
+snippet "(I?)(r?)(?<!l)f(\S+) *" "for i,[1],[n]" br
+for(`!p snip.rv=forArgument([match.group(3),'1','n'],useInt=bool(not match.group(1)),Reverse=bool(match.group(2)))`){
+	$0
+}
+endsnippet
+# define LineFor i,[1],[n]
+snippet "(I?)(r?)lf(\S+) *" "LineFor i,[1],[n]" br
+for(`!p snip.rv=forArgument([match.group(3),'1','n'],useInt=bool(not match.group(1)),Reverse=bool(match.group(2)))`) $0
+endsnippet
+
+
+
+#============================ f n
+
+# define for [i],[1],n
+snippet "(I?)(r?)(?<!l)f +(\S+) *" "for [i],[1],n" br
+for(`!p snip.rv=forArgument(['i','1',match.group(3)],useInt=bool(not match.group(1)),Reverse=bool(match.group(2)))`){
+	$0
+}
+endsnippet
+# define LineFor [i],[1],n
+snippet "(I?)(r?)lf +(\S+) *" "for" br
+for(`!p snip.rv=forArgument(['i','1',match.group(3)],useInt=bool(not match.group(1)),Reverse=bool(match.group(2)))`) $0
+endsnippet
+
+#============================ f
+
+# define for [i],[1],[n]
+snippet "(I?)(r?)(?<!l)f *" "for(i=1;i<=n;i++) or Reverse" br
+for(`!p snip.rv=forArgument(['i','1','n'],useInt=bool(not match.group(1)),Reverse=bool(match.group(2)))`){
+	$0
+}
+endsnippet
+# define LineFor [i],[1],[n]
+snippet "(I?)(r?)lf *" "for(i=1;i<=n;i++) or Reverse In One Line" br
+for(`!p snip.rv=forArgument(['i','1','n'],useInt=bool(not match.group(1)),Reverse=bool(match.group(2)))`) $0
+endsnippet
+
+
+# 通过迭代器遍历容器（可读写）
+#snippet for
+#for (auto ${2:iter} = ${1:c}.begin(); ${3:$2} != $1.end(); ${4:++iter}) {
+#    ${5:TODO}
+#}
+#endsnippet
+# 通过迭代器遍历容器（只读）
+snippet cfor
+for (auto ${2:citer} = ${1:c}.cbegin(); ${3:$2} != $1.cend(); ${4:++citer}) {
+    ${5:TODO}
+}
+endsnippet
+# 通过下标遍历容器
+snippet For
+for (decltype($1.size()) ${2:i} = 0; $2 != ${1}.size(); ${3:++}$2) {
+    ${4:TODO}
+}
+endsnippet
+
+# C++11风格for循环遍历（可读写）
+snippet F
+for (auto& e : ${1:c}) {
+}
+endsnippet
+# C++11风格for循环遍历（只读）
+snippet CF
+for (const auto& e : ${1:c}) {
+}
+endsnippet
+# For Loop
+snippet FOR
+for (unsigned ${2:i} = 0; $2 < ${1:count}; ${3:++}$2) {
+    ${4:TODO}
+}
+endsnippet

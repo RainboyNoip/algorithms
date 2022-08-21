@@ -1,0 +1,49 @@
+snippet author_info "作者信息" i
+/*-----------------
+* author: Rainboy
+* email: rainboylvx@qq.com
+* time: `date`
+*----------------*/
+endsnippet
+
+snippet // "行内注释" b
+/**
+ * ${0}
+ */
+endsnippet
+
+#snippet in "#include" b
+##include <${1:cstdio>}
+#endsnippet
+
+snippet main "main()" b
+int main(){
+    ${0}
+    return 0;
+}
+endsnippet
+
+
+#freopen stdin
+snippet fr "freopen" b
+freopen("${1}.in","r",stdin);
+${0}
+endsnippet
+
+#freopen stdout
+snippet fw "freopen stdout" b
+freopen("${1}.out","w",stdout);
+${0}
+endsnippet
+
+
+# return
+snippet "re (\S+)" "return" br
+return `!p snip.rv=match.group(1)`;
+endsnippet
+
+#return 0;
+snippet re "return 0" b
+return;
+endsnippet
+

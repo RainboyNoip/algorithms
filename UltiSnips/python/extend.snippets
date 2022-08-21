@@ -1,0 +1,21 @@
+snippet tt "template" b
+#!/usr/bin/env python
+from functools import reduce
+from itertools import chain
+from random import randint
+import os
+
+# 读入所有的数据
+data = [ list(map(int,line.split())) for line in sys.stdin ]
+# 读取所有内容
+# file_context = open(file).read() #.splitlines() 
+$0
+endsnippet
+
+snippet read "input" b
+a = list(map(int,input().split()))
+endsnippet
+
+snippet pr "print" b
+print($1)
+endsnippet

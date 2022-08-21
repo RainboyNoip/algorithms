@@ -1,0 +1,31 @@
+snippet qsm "快速幂取余" b
+typedef long long LL;
+/* 求 a^n % p */
+LL pow(LL a,LL n,LL p){
+	LL base = a;
+	LL ret =1;
+	
+	for( ;n ;n=n >> 1){
+		if(n & 1)//取最低位, 是不是很像判断奇偶
+			ret = ret * base % p;
+		base = base*base % p;
+	}
+	return ret % p;
+}
+endsnippet
+
+snippet quick_pow "快速幂取余" b
+template <class T>
+class quick_pow {
+    T mod;
+    quick_pow(T m):mod(m){}
+    T operator()(T a,T k){
+        T base = a,ret = 1;
+        for( ; a ; a >>=1){
+            if( a & 1 ) ret = ( ret * base) % mod;
+            base = (base * base) % mod;
+        }
+        return ret;
+    }
+};
+endsnippet

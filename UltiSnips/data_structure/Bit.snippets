@@ -1,0 +1,129 @@
+# 树状数组
+snippet bit "树状数组" b
+template<typename T,int N=maxn>
+struct Bit {
+    T c[N];
+    //Bit(){}
+    inline int lowbit(int x) { return x & -x;      }
+    inline int fa(int p)     { return p+lowbit(p); }
+    inline int left(int p)   { return p-lowbit(p); }
+
+    void update(int p, T v){
+        for( ; p <= N; p = fa(p) ) c[p] += v;
+    }
+
+    T query(int p){ //前缀合
+        T sum=0;
+        for( ;p > 0 ; p = left(p)) sum+= c[p];
+        return sum;
+    }
+};
+Bit<ll> bit;
+endsnippet
+
+snippet bit_range_point "树状数组-区间修改 单点查询" b
+template<typename T,int N=maxn>
+struct Bit_range_point {
+    T c[maxn]; // c[i] = a[i] - a[i-1]
+    Bit_range_point(T a[],int n){
+        for(int i=1;i<=n;++i) c[i] = a[i] - a[i-1];
+    }
+
+    inline T lowbit(T x) { return x & -x;      }
+    inline T fa(int p)   { return p+lowbit(p); }
+    inline T left(int p) { return p-lowbit(p); }
+
+    void update(T p, T v){
+        for( ; c[p] <= N; p = fa(p) ) c[p] += v;
+    }
+
+    inline void update_range(int l,int r,T v){
+        update(l,v);
+        update(r+1,-v);
+    }
+
+    void query(T p){ //前缀合,单点查询
+        T sum=0;
+        for( ;p > 0 ; p = left(p)) sum+= c[p];
+        return sum;
+    }
+};
+Bit_range_point<int,maxn> bit;
+endsnippet
+
+snippet bit_range_range "树状数组- 区间修改 区间查询" b
+template<typename T,int N = maxn,typename comp=greater<T> >
+struct Bit_range_range {
+    T c[maxn],d[maxn];
+    inline T lowbit(T x) { return x & -x;      }
+    inline T fa(int p)   { return p+lowbit(p); }
+    inline T left(int p) { return p-lowbit(p); }
+
+    //核心公式：sum_a[i] = (i+1)×sum_c[i] - sum_{i×c[i]}
+};
+Bit<int,maxn> bit;
+endsnippet
+
+snippet bit_max "树状数组 区间最值" b
+struct Bit_max {
+    T a[maxn],c[maxn]; // a是原数组
+    comp com;
+    inline int lowbit(T x) { return x & -x;      }
+    inline int fa(int p)   { return p+lowbit(p); }
+    inline int left(int p) { return p-lowbit(p); }
+    inline T g(T a ,T b) { return com(a,b) ? a : b;}
+    void update_by_child(int p,T v){ //alias push
+        c[p] = a[p] = v;
+        int lb = lowbit(p);
+        for(int i=1;i < lb ;i <<= 1)
+            c[p] = g(c[p],c[p-i]);
+    }
+
+    void update(int p,T v){
+        update_by_child(p, v);
+        T t = c[p];
+        for( p = fa(p); p<=N ; p = fa(p)){
+            if( com(t,c[p]) ) c[p] = t;
+            else break;
+        }
+    }
+
+    T query(int l,int r){ // 求区间最值
+        T ret = a[l];
+        for( ; l <=r; ){
+            int next = left(r)+1;
+            if( next >= l ) ret = g(ret,c[r]) , r = next-1;
+            else            ret = g(ret,a[r]) , r--;
+        }
+        return ret;
+    }
+};
+Bit_max<ll> bit;
+endsnippet
+
+snippet BIT_2D "二维BIT" b
+/* 二维BIT  BIT_2D */
+/* 核心在于 C[x][y] 管辖的范围*/
+namespace BIT_2D {
+    //横管横，纵管纵
+    typedef long long ll;
+    const int MAXN = 4100;
+    int SIZE_N = 4100;
+    int SIZE_M = 4100;
+    ll a[MAXN][MAXN],c[MAXN][MAXN];
+    inline int lowbit(int x){ return x&-x;}
+    void update(int x,int y,int val){
+        for(int i=x;i <=SIZE_N;i += lowbit(i))
+            for(int j=y;j <=SIZE_M;j += lowbit(j))
+                c[i][j] += val;
+    }
+    ll query(int x,int y){
+        ll sum =0;
+        for( int i = x;i>0; i -= lowbit(i))
+            for(int j = y ;j >0;j-=lowbit(j))
+                sum += c[i][j];
+        return sum;
+    }
+    ll query_sub_martix(int x1,int y1,int x2,int y2){ return query(x2, y2) - query(x2, y1-1) - query(x1-1,y2) + query(x1-1, y1-1); }
+}
+endsnippet

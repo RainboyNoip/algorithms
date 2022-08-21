@@ -109,3 +109,11 @@ include
 
 ### 2. 配合coc.nvim使用,更好的使用体验
 
+## UtilSnips 补全
+
+在[UtilSnips](./UltiSnips)目录下放置了我常用代码片断,vim中如何安装`UltiSnips`,请自行搜索
+
+```vimL
+let g:global_author = '<you name>'
+let g:global_email = '<your email>'
+```

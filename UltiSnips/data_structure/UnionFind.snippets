@@ -1,0 +1,19 @@
+snippet unionfind "并查集" b
+//================ 并查集 ================
+struct UnionFind {
+    int fa[maxn];
+    UnionFind(int len = maxn){
+        for(int i=1;i<=len;++i) fa[i] =i;
+    }
+
+    int find(int u){
+        if ( u==fa[u]) return u;
+        return fa[u] = find(fa[u]);
+    }
+
+    inline void un(int u,int v){
+        fa[find(u)] = find(v);
+    }
+} uset;
+$0
+endsnippet

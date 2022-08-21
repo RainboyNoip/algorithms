@@ -1,0 +1,16 @@
+snippet dp "对拍shell脚本" b
+for i in {1..1000};
+do
+    echo $i
+    ./data > int
+    ./1 < int > out1
+    ./2 < int > out2
+    diff out1 out2 
+    if [ $? -eq 1 ];then
+        echo 失败
+        exit # 失败就退出
+    fi
+done
+
+$0
+endsnippet

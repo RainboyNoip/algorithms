@@ -1,0 +1,26 @@
+# === 队列 ===
+# 作用: FIFO
+# author:Rainboy
+
+snippet queue_base_on_array "数组实现的队列" b
+int _queue_head=0; //头部初始化
+int _queue_tail=0; //尾部初始化
+
+/* 我们的队列从下标1开始使用 */
+int _queue[${1:maxn}];//数据模拟队列
+
+/* 初始的时候，认为队列中没有数据 所以tail=0 */
+//加入队尾
+void push(int i){ _queue[_queue_tail++]=i; }
+
+//返回队首的值
+int front(){ return _queue[_queue_head]; }
+
+//弹出
+void pop(){ _queue_head++; }
+
+
+/* head == tail 时候 就认为队列为空 */
+bool empty(){ return _queue_head == _queue_tail; }
+${0}
+endsnippet

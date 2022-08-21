@@ -1,0 +1,31 @@
+# RMQ 区间最值
+
+snippet rmq "Description" b
+/* ========================  RMQ_BEG  ======================== */
+template<typename T,int N = maxn,typename Comp = greater<T>> //long long or int
+struct Rmq {
+    T f[N][50]; //f[i][j] --> i+2^j-1
+    int logn[N] = {0,0,1};
+    Comp comp;
+    Rmq(){ memset(f,0,sizeof(f)); }
+    
+    inline T good(const T &a,const T &b) {
+        return comp(a,b) ? a : b;
+    }
+
+    void init(int n){ 
+        for(int i=3;i<=n;++i) logn[i] = logn[i/2] +1;
+        //for(int i=1;i<=n;++i) f[i][0] = a[i];
+        for(int j=1; (1<<j) <= n ;j++) //得到f[i][j]
+            for(int i=1; i+(1<<j)-1 <=n;i++) //i+(1<<j)-1<=n 表示所求的范围的最后一个值在原数组范围内
+                f[i][j] = good(f[i][j-1],f[i+(1<<(j-1))][j-1]);
+    }
+
+    T query(int l,int r){ //查询区间最值
+        int k = logn[r-l+1];
+        return good(f[l][k],f[r-(1<<k)+1][k]);
+    }
+};
+Rmq<int> rmq;
+/* ========================  RMQ_END  ======================== */
+endsnippet
