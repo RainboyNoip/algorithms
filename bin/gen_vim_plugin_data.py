@@ -3,10 +3,21 @@
 
 
 # 算法过程
-# 1. 得到所有的hpp头文件
-# 2. 生成一个dict型邻接表
-# 3. 提取 header,info,word,abbr等信息
-# 4. top sort -> 生成 头序列
+# 1. 得到所有的hpp头文件列表
+# 2. 生成一个dict型邻接表:linkedNode
+# 4. 提取 depHeaders,complete_items,info,word,等信息
+#     "filename" : {
+#       depHeaders : [filename1,filename2] 依赖的头文件
+#       complete_items: {
+#               word
+#               info
+#               expand
+#           }
+#      }
+# 4. 得到3个vim需要的数据, 
+#    - word_pairs 触发需要的信息,expand,header
+#    - complete_items -> [{word,info}] complete_menu 显示需要的信息 h: complete_item
+#    - header_seq  自动添加头文件时需要 遵循的顺序
 
 import glob
 import re
@@ -68,7 +79,7 @@ for header in header_files:
 print(json.dumps(linkedNode,indent=4))
 
 # 2. 生成 complete_items 列表
-# 每个word 对应的 头文件
+# 每个word 对应的 {header_path,expand}
 
 all_complete_items = []
 all_word_pairs= {}
@@ -96,7 +107,7 @@ headerCnt = len(stack)
 
 while len(stack) != 0:
     h = stack.pop()
-    topSortHeader.append(h)
+    topSortHeader.append('\'' + h + '\'')
     if headerCnt == headerTot:
         continue
     for key in linkedNode:
@@ -106,3 +117,47 @@ while len(stack) != 0:
                 stack.append(key)
 
 print('\n'.join(topSortHeader))
+
+
+vimdata = ""
+# 头文件顺序
+vimdata += "let s:header_seq = [{}]".format(','.join(topSortHeader)) 
+vimdata += '\n\n'
+
+# 每个word 对应的 {header_path,expand}
+vimdata += "let s:word_pairs = { \n" 
+for item in all_word_pairs:
+    vimdata += "    \\'{}': {{ \n".format(item)
+    for key in all_word_pairs[item]:
+        vimdata += "        \\'{}': '{}', \n".format(key,all_word_pairs[item][key])
+    vimdata += "    \\},\n" 
+vimdata += "\\}" 
+vimdata += "\n\n" 
+
+vimdata += "let s:complete_items = [\n"
+for item in all_complete_items:
+    vimdata += "    \\{\n"
+    for key in item:
+        vimdata += "        \\'{}': '{}', \n".format(key,item[key])
+    vimdata += "    \\},\n"
+vimdata += "\\]"
+vimdata += "\n\n" 
+
+vimdata += '''
+function! ralgo#data#GetComplete() 
+    return s:complete_items
+endfunction
+
+function! ralgo#data#GetHeader() 
+    return s:header_seq
+endfunction
+
+function! ralgo#data#GetWordPairs() 
+    return s:word_pairs
+endfunction
+'''
+print(vimdata)
+
+# 写入数据
+with open(path.join(path.dirname(__file__),'../autoload/ralgo/data.vim') ,'w') as f:
+    f.write(vimdata)
