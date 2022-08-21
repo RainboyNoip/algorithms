@@ -1,0 +1,69 @@
+1. 提示相应算法的名字
+2. 根据相应的算法自动添加头文件
+4. 应该放到ftplugin里,filetype= c++
+
+思路,参考 [vim-Auto complete code(打造自己的IDE) 自动完成代码片段-进阶版（2）支持光标变量&进入可编辑状态 - 知乎](https://zhuanlan.zhihu.com/p/461800790)
+
+
+1. 关键字
+- r-linklist
+- a-linklist
+- al-linklist
+- ra-linklist
+
+2. 弹出menu
+
+3. 回车上屏幕
+4. 自动添加头文件
+
+5. 折叠的设置
+
+
+最后采取的方案是
+
+dict + complete
+
+complete 函数补全
+最后谈一下最为灵活的补全方式：通过使用 complete 函数 :h complete()
+
+-- -- -- --
+
+新的想法,只加入头文件
+
+头文件的依赖,树型
+
+信息1: 当前的文件的头文件列表
+line("$") 全部的行数
+
+是否匹配 getline(.) =~ '#include "[\w<>]*$"'
+
+--------------------------
+加入头文件的原则
+
+如果有已经的 头文件
+    例如 header: graph/linklist.hpp 那就不用添加
+否则没有:
+    保证在后序的header前添加
+    前序header后添加
+    在所有的 <header> 后添加
+
+核心: 设计这个查找位置(行)的算法
+
+--------------------------
+
+
+使用regexp 得到想要的提取的文字
+matchlist
+
+算法过程
+
+1. 能过补全,获得,关键 字符串a
+  - autocmd CompleteDone 做后面的操作
+2. 根据a得到需要加入的头文件列表
+3. 添加头文件列表
+
+
+
+最后一个头文件所在的位置
+
+

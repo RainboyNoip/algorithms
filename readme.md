@@ -39,7 +39,7 @@ export CPLUS_INCLUDE_PATH=$HOME/.algorithms:$CPLUS_INCLUDE_PATH
 export PATH=$PATH:$HOME/.algorithms/bin
 ```
 
-其它
+其它依赖软件
 
 ```bash
 # 安装graphviz,xsel
@@ -100,3 +100,12 @@ include
 ├── random.hpp
 └── utils.hpp
 ```
+
+## vim 自动补全
+
+### 0. 安装方法
+
+### 1. 单独使用,不依赖其它vim插件
+
+### 2. 配合coc.nvim使用,更好的使用体验
+
