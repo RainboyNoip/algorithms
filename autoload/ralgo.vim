@@ -8,6 +8,10 @@
 set completeopt=menu,menuone,noinsert
 let g:algorimth_dir = '/home/rainboy/mycode/RainboyNoip/algorithms/include/'
 
+function! ralgo#Hello() abort
+    echom "hello world,ralgo"
+endfunction
+
 
 "数据
 let g:algo_data = {

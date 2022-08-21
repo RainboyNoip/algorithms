@@ -1,3 +1,11 @@
+/*---
+{
+"info":"tarjan求强连通分量",
+"word":"tarjan_scc",
+"expand":"tarjan_scc<MAXN::value,linkList> scc;",
+"user_data":"ralgo"
+}
+---*/
 /**
  * tarjan_scc 用tarjan 求 Strongly Connected Components，SCC,强连通分量的算法
  * 判断一个图是否为强连通以及找到一个图强连通分量只需要线性时间（Θ(V + E)）
@@ -28,7 +36,7 @@
 namespace RALGO {
 
 template<std::size_t size,typename LinkList = linkList> 
-struct _tarjan_scc {
+struct tarjan_scc {
     
 private:
     int dfn[size];  // 每个点的编号
@@ -107,7 +115,7 @@ public:
 
 };
 
-using tarjan_scc = _tarjan_scc<MAXN::value, linkList>;
+//using tarjan_scc = _tarjan_scc<MAXN::value, linkList>;
 
 } // end namespace RALGO
 

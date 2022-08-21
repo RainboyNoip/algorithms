@@ -1,3 +1,11 @@
+/*---
+{
+"info":"链式前向星,存图",
+"word":"linkList",
+"expand":"linkList<MaxN> e;",
+"user_data":"ralgo"
+}
+---*/
 // https://zh.wikipedia.org/wiki/%E9%93%BE%E5%BC%8F%E5%89%8D%E5%90%91%E6%98%9F
 //[链式前向星及其简单应用 | Malash's Blog](https://malash.me/200910/linked-forward-star/)
 /**

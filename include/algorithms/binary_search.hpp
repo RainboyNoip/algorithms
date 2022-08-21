@@ -1,3 +1,11 @@
+/*---
+{
+"info":"二分查找",
+"word":"binary_search",
+"expand":"binary_search(Iter first,Iter last,Compare Func)",
+"user_data":"ralgo"
+}
+---*/
 /**
  * l                     r
  * -----------------------
@@ -6,13 +14,14 @@
  *  在一个单调的区间[l,r)的基础上,找到一个不符合__check的位置
  */
 #pragma once
-#include "../base.hpp"
+#include "base.hpp"
 
 namespace RALGO {
 
 // 第一个使用 Compare 不成立的 位置
 template<typename Iter,
-        typename Compare = std::less< typename std::iterator_traits<Iter>::value_type >
+        typename Compare 
+        //= std::less< typename std::iterator_traits<Iter>::value_type >
     >
 Iter binary_search(Iter first,Iter last,Compare&& __check
          = [](typename  std::iterator_traits<Iter>::value_type & v) {

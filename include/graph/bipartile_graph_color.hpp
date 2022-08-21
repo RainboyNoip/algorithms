@@ -1,3 +1,11 @@
+/*---
+{
+"info":"二分图染色",
+"word":"bipartite_graph_color",
+"expand":"bipartite_graph_color<MAXN::value,linkList> bp_gcolor;",
+"user_data":"ralgo"
+}
+---*/
 /**
  * 二分图染色,
  *
@@ -14,13 +22,13 @@ namespace RALGO {
     
 
 template<std::size_t size,typename LinkList = linkList> 
-struct _bipartite_graph_color 
+struct bipartite_graph_color 
 {
 private:
     linkList & _e;
     int color[size];
 public:
-    _bipartite_graph_color(linkList & e) : _e{e} 
+    bipartite_graph_color(linkList & e) : _e{e} 
     {
         //-1表示还没有颜色，就是没有访问过
         memset(color,-1,sizeof(color));
@@ -46,6 +54,6 @@ private:
 
 };
 
-using bipartile_graph_color = _bipartite_graph_color<MAXN::value, linkList>;
+//using bipartile_graph_color = _bipartite_graph_color<MAXN::value, linkList>;
 
 } // end namespace RALGO
