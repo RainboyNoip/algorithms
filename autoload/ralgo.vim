@@ -103,10 +103,34 @@ func! RalgoComlete(findstart,base)
 endfunc
 
 " 执行触发
-func! RalgoExpand()
-    if has_key(v:completed_item,'user_data') && v:completed_item['user_data'] ==# 'Ralgo_compl'
-       call setline(line('.'),v:completed_item['word'] .. 'hello')
+"
+func! ralgo#RalgoExpand()
+    " 1. 得到前面的单词 TODO \S -> \k
+    let word = matchstr(getline('.'), '\(^\|\s\)\zs\S\+\%'.col('.').'c\ze\($\|\s\)')
+    let len = len(word)
+    "" 2.查找是否是有这个 触发 关键字
+    if !has_key(ralgo#data#GetWordPairs(),word)
+        return '';
     endif
+
+    if len == 1 | norm! h"_x
+    el | norm! B"_dE
+    en
+    let lnum = line('.')
+    let col = col('.')
+
+    let afterCursor = strpart(getline('.'), col-1)
+    if afterCursor != "\t" && afterCursor != ' ' | sil s/\%#.*//
+    el | let afterCursor = '' | en
+
+    let snippet = ralgo#data#GetWordPairs()[word]['expand']
+
+    let line = getline(lnum)
+    "现在默认就一行
+    call setline(lnum,line .. snippet)
+    call cursor(lnum,col + len(snippet))
+    return ''
+
 endfunc
 
 func! RalgoSnipComplete()
@@ -134,17 +158,17 @@ func! RalgoSnipComplete()
     return ''
 endfunc
 
-set completefunc=RalgoComlete
-inoremap <c-l> <C-R>=RalgoSnipComplete()<cr>
+"set completefunc=RalgoComlete
+"inoremap <c-l> <C-R>=RalgoSnipComplete()<cr>
 
 "i am hello world edge<100> e;
 
-inoremap <expr> <cr> pumvisible() ? "\<c-y>" : "\<c-g>u\<cr>"
-inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<c-g>u\<tab>"
+"inoremap <expr> <cr> pumvisible() ? "\<c-y>" : "\<c-g>u\<cr>"
+"inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<c-g>u\<tab>"
 
-augroup Ralgo_auto_group
-	autocmd!
-	autocmd CompleteDone * call RalgoExpand()
-augroup END
+"augroup Ralgo_auto_group
+"	autocmd!
+"	autocmd CompleteDone * call RalgoExpand()
+"augroup END
 
 "edgeArray

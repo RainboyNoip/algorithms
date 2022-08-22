@@ -107,7 +107,21 @@ include
 
 ### 1. 单独使用,不依赖其它vim插件
 
+如果你没有使用任何vim的插件,例如noilinux2.0下的纯vim不安装插件
+
+安装方法TODO
+
 ### 2. 配合coc.nvim使用,更好的使用体验
+
+原理: [Create custom source · neoclide/coc.nvim Wiki](https://github.com/neoclide/coc.nvim/wiki/Create-custom-source)
+
+1. 先安装[coc.nvim](https://github.com/neoclide/coc.nvim/)
+2. 使用`vim-plug`或`packer.nvim`管理当前库,例如,
+  ```
+  use 'RainboyNoip/algorithms'
+  ```
+3. 打开一个cpp文件:`vim 1.cpp`
+4. 输入`tarja`,然后回车补全
 
 ## UtilSnips 补全
 
