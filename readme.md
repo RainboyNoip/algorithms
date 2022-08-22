@@ -5,6 +5,8 @@
         <img src="https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white" /></a>
     <a href="https://www.gnu.org/licenses/gpl-3.0" alt="gpl-3.0">
         <img src="https://img.shields.io/github/license/rainboyNoip/algorithms?style=for-the-badge" /></a>
+    <a href="https://github.com/RainboyNoip/algorithms" alt="gpl-3.0">
+        <img src="https://img.shields.io/badge/version-2022.8.22-blue?style=for-the-badge" /></a>
 </p>
 
 ## 目的
@@ -133,3 +135,7 @@ let g:global_email = '<your email>'
 ```
 
 [snippets使用文档](./snips.md)
+
+## 更新日志
+
+[更新日志](./log.md)

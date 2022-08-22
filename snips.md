@@ -202,27 +202,3 @@ for 循环这里最复杂触发，最简单的使用：输入一个`f`(后面可
 
 ![](./images/Irfj-1-100.gif)
 
-
-## 算法
-
-| id | 触发                  | 说明                 |
-|----|-----------------------|----------------------|
-| 1  | <kbd>lca-tarjan</kbd> | tarjan求lca,离线法   |
-| 2  | <kbd>lca-doubly</kbd> | 树上倍增求lca,在线法 |
-| 3  | <kbd>dfs-seq</kbd>    | ...                  |
- 
-
-## 数据结构
-
-| id | 触发                       | 说明                       |
-|----|----------------------------|----------------------------|
-| 1  | <kbd>linkList</kbd>        | 链式前向星                 |
-| 2  | <kbd>unionfind</kbd>       | 并查集                     |
-| 3  | <kbd>rmq</kbd>             | rmq                        |
-| 4  | <kbd>bit</kbd>             | 树状数组                   |
-| 5  | <kbd>bit_range_point</kbd> | 树状数组 区间修改 单点查询 |
-| 6  | <kbd>bit_range_range</kbd> | 树状数组 区间修改 区间查询 |
-| 7  | <kbd>bit_max</kbd>         | 树状数组 区间最值          |
-| 8  | <kbd>bit_2D</kbd>          | 树状数组 二维              |
-| 9  | <kbd>sgt_point</kbd>       | 线段树 单点更新 区间查询   |
-
