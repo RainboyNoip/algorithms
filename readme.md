@@ -9,6 +9,20 @@
         <img src="https://img.shields.io/badge/version-2022.8.22-blue?style=for-the-badge" /></a>
 </p>
 
+
+* [目的](#目的)
+* [约定](#约定)
+* [安装与更新](#安装与更新)
+* [文档](#文档)
+* [vim 自动补全](#vim-----)
+  + [0. 安装方法](#0-----)
+  + [1. 单独使用,不依赖其它vim插件](#1-----------vim--)
+  + [2. 配合coc.nvim使用,更好的使用体验](#2---cocnvim----------)
+* [UtilSnips 补全](#utilsnips---)
+* [更新日志](#----)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 ## 目的
 
 受[xtaci/algorithms: Algorithms & Data structures in C++.](https://github.com/xtaci/algorithms) 启发，把写题目用到的算法与数据结构写出来，用于：
@@ -17,7 +31,7 @@
 2. 个人算法总结
 3. 算法学习
 
-## 约定 ( Convention ):
+## 约定
 
 1. 一个算法用一个`.hpp`文件表示放到include下. ( one .header file per algorithm. )
 2. 算法演示的demo程序放到src下.  ( one demo per algorithm.  )

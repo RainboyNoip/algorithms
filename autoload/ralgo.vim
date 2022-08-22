@@ -29,12 +29,6 @@ let g:algo_data = {
     \}
 \}
 
-" 头文件的顺序,用于确定添加头文件的位置
-let s:header_seq = [
-    \ 'base.hpp',
-    \ 'graph/linkList.hpp'
-    \ ]
-
 function! GetCodePreivew(name)
     return join(readfile(g:algorimth_dir .. a:name),'\n')
 endfunc
@@ -56,25 +50,26 @@ endfunc
 
 " 参数,需要加入的头文件
 " 返回: 需要添的传这的个头文件在当前buffer的行范围
-" 返回值 [start,end]
+" 返回值 lineNum
 " 
-function! MatchHeaderInfo(header_name)
+function! s:MatchHeaderInfo(header_name)
     "let lc = getline('$') " line count
-    let l:self_index = index(s:header_seq,a:header_name)
+    let header_seq = ralgo#data#GetHeader()
+    let l:self_index = index(header_seq,a:header_name)
     "echo l:self_index
     let l:ret = 1
-    for i in range(1,getline('$'))
-        let l:line  = getline(i)
+    for i in range(1,line('$'))
+        let l:line = getline(i)
         if l:line =~? '^#include\s*<\S\+>\s*$'
-            let l:ret = i + 1" 下一行
+            let l:ret = i + 1 " 下一行
         elseif l:line =~? '^#include\s*"\S\+"\s*$'
             let l:inc = matchstr(l:line,'^#include\s*"\zs\S\+\ze"\s*$')
             if l:inc ==# a:header_name
                 return -1 " 不用添加
             endif
-            let l:idx1 = index(s:header_seq,l:inc)
+            let l:idx1 = index(header_seq,l:inc)
 
-            if l:idx1 == -1 || l:idx1 < l:self_idx " 不在列表中
+            if l:idx1 == -1 || l:idx1 < l:self_index " 不在列表中
                 let l:ret = i+1 " 下一行
             elseif l:idx1 > l:self_index " 超过
                 return l:idx1
@@ -84,7 +79,15 @@ function! MatchHeaderInfo(header_name)
     return l:ret
 endfunc
 
-echo MatchHeaderInfo('graph/linkList.hpp')
+func! s:AddHeader(header_name)
+    let lineNum = s:MatchHeaderInfo(a:header_name)
+    if lineNum == -1
+        return
+    endif
+    echom lineNum
+    echo lineNum
+    call append(lineNum-1, '#include "'.. a:header_name .. '"')
+endfunc
 
 func! RalgoComlete(findstart,base)
   if a:findstart
@@ -129,8 +132,16 @@ func! ralgo#RalgoExpand()
     "现在默认就一行
     call setline(lnum,line .. snippet)
     call cursor(lnum,col + len(snippet))
+    call s:AddHeader(ralgo#data#GetWordPairs()[word]['header'])
     return ''
 
+endfunc
+
+" 打开最后一次解发对应的文件
+func! ralgo#OpenLast()
+    exe 'view ' .. '/home/rainboy/mycode/RainboyNoip/algorithms/include/base.hpp'
+    exe 'setlocal nomodifiable'
+    exec 'nnoremap <buffer> q :bw<cr>'
 endfunc
 
 func! RalgoSnipComplete()
