@@ -131,3 +131,5 @@ include
 let g:global_author = '<you name>'
 let g:global_email = '<your email>'
 ```
+
+[snippets使用文档](./snips.md)

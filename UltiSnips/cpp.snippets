@@ -1,12 +1,90 @@
-extends c
-#extends base
-#extends math
-#extends tools
-#extends algorithm/graph
-#extends algorithm/search
-#extends algorithm/string
-#extends data_structure
-#extends tools/util.snippets
+snippet author_info "作者信息" i
+/*-----------------
+* author: Rainboy
+* email: rainboylvx@qq.com
+* time: `date`
+*----------------*/
+endsnippet
+
+#=================================
+# 全局工具函数
+#=================================
+
+# 转换成相应
+global !p
+def tranFlag(flag,inp,sep='',sepDefault=' '):
+	if flag == None:
+		flag = 'd'
+	if sep == None: #默认用空格分隔
+		sep = sepDefault
+	flag = '%'+flag
+	return (len(inp.split())-1)*(flag+sep) + flag
+endglobal
+
+global !p
+def tranSeq(inp,sep=''):
+	a = inp.split()
+	return sep+(','+sep).join(a)
+endglobal
+
+global !p
+def tranSeq2(inp,sep=''):
+	a = inp.split()
+	temp= sep+','
+	return temp.join(a)+sep
+endglobal
+
+global !p
+def tranSeq3(inp,sep=''):
+	a = inp.split()
+	return sep.join(a)
+endglobal
+
+#=================================
+# 全局工具函数 END
+#=================================
+
+snippet // "行内注释" b
+/**
+ * ${0}
+ */
+endsnippet
+
+snippet ma "main()" b
+int main(){
+    ${0}
+    return 0;
+}
+endsnippet
+
+
+#freopen
+snippet fre "freopen" b
+freopen("${1:filename}.in","r",stdin);
+freopen("$1.out","w",stdout);
+
+$0
+
+fclose(stdin);
+fclose(stdout);
+endsnippet
+
+
+# return
+snippet "re (\S+)" "return" br
+return `!p snip.rv=match.group(1)`;
+endsnippet
+
+#return;
+snippet re "return;" b
+return;
+endsnippet
+
+#return 0;
+snippet re0 "return;" b
+return 0;
+endsnippet
+
 
 snippet us "标准命名空间" b
 using namespace ${1:std};
@@ -16,25 +94,42 @@ snippet in "#include" b
 #include <${1:iostream>}
 endsnippet
 
+snippet ins "#include" b
+#include <bits/stdc++.h>
+$0
+endsnippet
 
 #=================================
-#结构语句
+# 循环语句
 #=================================
-# if
+# if,
+# li line if
+
+# ei else if{}
+# lei line else if 
+
+# el esle {}
+# le line else 
+
+# ie if {} else {}
+
+# wh while
+# lw line while
+# do do while
+
 snippet if
 if( ${1:/* condition */} ) {
     ${2}
 }
 endsnippet
-# line if
-snippet lif "line if" b
+
+snippet li "line if" b
 if( ${1:/* condition */} ) $0
 endsnippet
 
-# else if
 snippet ei
 else if ( ${1:/* condition */} ) {
-    $1
+    $0
 }
 endsnippet
 
@@ -42,18 +137,24 @@ snippet lei "line else if" b
 else if( ${1:condition} ) $0
 endsnippet
 
-
-# else
 snippet el "else" b
 else {
     ${1:TODO}
 }
 endsnippet
 
-snippet lel "line else" b
-else $0
+snippet le "line else" b
+else $0;
 endsnippet
 
+snippet ie "if {} else {}" b
+if ( ${1:condition} ) {
+	$2
+}
+else {
+	$3
+}
+endsnippet
 
 # While Loop
 snippet wh
@@ -63,17 +164,21 @@ while ( ${1:/* condition */} ) {
 endsnippet
 
 #line While Loop
-snippet lwh "line while loop" b
+snippet lw "line while loop" b
 while( ${1:condition} ) $0;
 endsnippet
 
-
 # Do While Loop
-snippet do
+snippet dw
 do {
-    ${1}
-} while ( ${0:/* condition */} );
+    ${2}
+} while ( ${1:/* condition */} );
 endsnippet
+
+
+#=================================
+# 循环语句 END
+#=================================
 
 
 # switch
@@ -92,7 +197,6 @@ snippet tf "typedef" b
 typedef ${1:typename} ${2:alias};
 endsnippet
 
-
 # typename
 snippet tn "typename" i
 typename ${1:name}
@@ -103,7 +207,9 @@ snippet tem "template<>" b
 template<typename T,${1:typename ${2:name}}>
 endsnippet
 
-# ========================= Class =========================
+#=================================
+# class and namespace
+#=================================
 
 snippet cla "class" b
 class ${1:name} {
@@ -139,5 +245,131 @@ snippet name "namespace" b
 namespace ${1:name} {
 	$0
 } // end namespace $1
-
 endsnippet
+
+#=================================
+# class and namespace END
+#=================================
+
+
+#=================================
+# 输入输出语句
+#=================================
+
+snippet pr "printf\n" b
+printf("${0:some string}");
+endsnippet
+
+snippet pn "换行 printf\n" b
+printf("${0:some string}\n");
+endsnippet
+
+snippet prn "换行 printf\n" b
+printf("\n");
+endsnippet
+
+# printf
+# pr[flag] [t1] [t1] [t3] [blank or ,]
+snippet "pr(\w+)? (([^,\s]+ )*[^,\s]+)([ ,])?" "printf" br
+printf("`!p snip.rv=tranFlag(match.group(1),match.group(2),match.group(4))`",`!p snip.rv=tranSeq(match.group(2))`);
+endsnippet
+
+#======================
+# printf with newline
+# pn[flag] [t1] [t1] [t3] [blank or ,]
+#======================
+snippet "pn(\w+)? (([^,\s]+ )*[^,\s]+)([ ,])?" "printf" br
+printf("`!p snip.rv=tranFlag(match.group(1),match.group(2),match.group(4))`\n",`!p snip.rv=tranSeq(match.group(2))`);
+endsnippet
+
+#--> scanf <--
+
+snippet sc "scanf" b
+scanf("${1:foo}",${2:bar})
+endsnippet
+
+# sc[flag] t1 t2 t3
+snippet "sc(\w+)? ((\S+ )*\S+)( )?" "scanf" ir
+scanf("`!p snip.rv=tranFlag(match.group(1),match.group(2),match.group(4),'')`",`!p snip.rv=tranSeq(match.group(2),'' if match.group(1)=='s' else '&')`);
+endsnippet
+
+
+#--> cin cout <--
+
+snippet "ci ((\S+ )*\S+)( )?" "cin" ir
+std::cin >> `!p snip.rv = tranSeq3(match.group(1)," >> ")`;
+endsnippet
+
+snippet co "cout" b
+std::cout << $0 ;
+endsnippet
+
+snippet coe "cout" b
+std::cout << $0 << std::endl;
+endsnippet
+
+snippet "co ((\S+ )*\S+)( )?" "cout" ir
+std::cout << `!p snip.rv = tranSeq3(match.group(1)," <<\" \"<< ")` << std::endl;
+endsnippet
+
+#=================================
+# 输入输出语句 END
+#=================================
+
+
+#=================================
+# 定义变量与函数
+#=================================
+
+#--> funtion <--
+snippet "F (\w+)?" "定义函数" br 
+${1:int} `!p snip.rv=match.group(1)`(${2: 参数}){
+	${0}
+}
+endsnippet
+#-->函数参数
+snippet "ii ((\w+ )*\w+)" "int a,int b" ir
+int `!p snip.rv=tranSeq3(match.group(1),',int ')`
+endsnippet
+
+#--> int <--
+
+snippet "i ((\w+ )*\w+)" "int 定义" br
+int `!p snip.rv=tranSeq(match.group(1))`;
+endsnippet
+
+# int 定义变量,初始化 i0 a b c => int a=0,b=0,c=0;
+snippet "i(\d+) ((\w+ )*\w+)" "int 定义,初始化" br
+int `!p snip.rv=tranSeq2(match.group(2),'='+match.group(1))`;
+endsnippet
+
+#--> memset <--
+snippet "mem (\S+) (\S+)" "memset a 0" br
+memset(${1:`!p snip.rv=match.group(1)`},`!p snip.rv=match.group(2)`,sizeof($1));
+endsnippet
+
+snippet maxn "maxn" b
+const int max${1:n} = 1e${2:5}+5;
+endsnippet
+
+snippet double_max "double max" b
+/*
+* 最大值: 
+*   - 0x7f
+*   - 0x42
+*   - 0x43
+* 最小值:
+*   - 0xfe
+*   - 0xc2
+*/
+endsnippet
+
+snippet st "struct" b 
+struct ${1:node} {
+	$0
+};
+endsnippet
+
+#=================================
+# 定义变量与函数 END
+#=================================
