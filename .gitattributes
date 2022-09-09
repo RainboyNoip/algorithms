@@ -1,1 +1,2 @@
 *.snippets linguist-detectable=false
+UltiSnips/* linguist-detectable=false
