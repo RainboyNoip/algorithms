@@ -8,7 +8,7 @@
 #include <algo/log.hpp>
 
 
-namespace __MY_SELF__NAMESPACE__ {
+namespace rainboy {
 
     class Timer {
         public:
@@ -35,4 +35,42 @@ namespace __MY_SELF__NAMESPACE__ {
             std::clock_t _start_time,_end_time;
             std::chrono::time_point<std::chrono::high_resolution_clock> _Wall_start,_Wall_end;
     };
-} //namespace __MY_SELF__NAMESPACE__
+
+
+#if __cplusplus >= 201703L
+
+inline void log_barrier(){
+    std::cout << "\n----------------------------\n\n";
+}
+
+template <typename... _Args>
+void log(_Args&&... args){
+    ( (std::cout << args << " "),...);
+    std::cout << '\n';
+}
+
+//输出类型名 type_name<int&>() -> "int&"
+template <class T>
+constexpr
+std::string_view
+type_name()
+{
+using namespace std;
+#ifdef __clang__
+    string_view p = __PRETTY_FUNCTION__;
+    return string_view(p.data() + 34, p.size() - 34 - 1);
+#elif defined(__GNUC__)
+    string_view p = __PRETTY_FUNCTION__;
+#  if __cplusplus < 201402
+    return string_view(p.data() + 36, p.size() - 36 - 1);
+#  else
+    return string_view(p.data() + 49, p.find(';', 49) - 49);
+#  endif
+#elif defined(_MSC_VER)
+    string_view p = __FUNCSIG__;
+    return string_view(p.data() + 84, p.size() - 84 - 7);
+#endif
+}
+
+#endif
+} //namespace rainboy

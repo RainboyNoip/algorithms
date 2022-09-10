@@ -1,6 +1,27 @@
 #pragma once
 #include "table.hpp"
 
+//TODO log(a,b,c) -> a = ? ,b = ? , c= ?
+
+// #define log(...) { \
+//     fprintf(stderr,"In [ %s ],At line [ %d ]\n",__func__,__LINE__); \
+//     fprintf(stderr,__VAR_ARGS__); \
+//     fprintf(stderr,"\n"); \
+// }
+
+template<char splitChar = ' ',typename first,typename ... Args>
+void log_impl(first&& _f,Args&& ... _args){
+    std::cerr << _f << splitChar<< " ";
+    log_impl<splitChar>(std::forward<Args>(_args)...);
+}
+
+template<char splitChar = ' ',typename Args>
+void log_impl(Args&& _args){
+    std::cerr << _args << "\n";
+}
+
+#define log(...) log_impl(#__VA_ARGS__,...)
+
 #define dbg_one(one)   std::cerr << #one " = " << one << std::endl
 #define tdbg_one(one)  std::cerr << Tools::Table (#one,one) << std::endl
 #define tdbg(...) Tools::table_debug(#__VA_ARGS__,__VA_ARGS__)
