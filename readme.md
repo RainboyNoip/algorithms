@@ -155,4 +155,6 @@ let g:global_email = '<your email>'
 [更新日志](./log.md)
 
 ## TanksFor
+
 - [GitHub - sharkdp/dbg-macro: A dbg(…) macro for C++](https://github.com/sharkdp/dbg-macro)
+- [agauniyal/rang: A Minimal, Header only Modern c++ library for terminal goodies 💄✨](https://github.com/agauniyal/rang)
