@@ -37,14 +37,18 @@ namespace rainboy {
 
         private:
             void* do_allocate(std::size_t bytes, size_t alignment) override {
-                // std::cout << "memoryPool" << "allocate " << bytes << " Bytes\n";
+#if defined (RAINBOY_DEBUG) && defined (MEMORY_DEBUG)
+                std::cerr << "memoryPool" << "allocate " << bytes << " Bytes\n";
+#endif
                 total += bytes;
                 void* ret = upstream->allocate(bytes, alignment);
                 return ret;
             }
 
             void do_deallocate(void* ptr, size_t bytes, size_t alignment) override {
-                // std::cout << "memoryPool" << "deallocate " << bytes << " Bytes\n";
+#if defined (RAINBOY_DEBUG) && defined (MEMORY_DEBUG)
+                std::cerr << "memoryPool" << "deallocate " << bytes << " Bytes\n";
+#endif
                 upstream->deallocate(ptr, bytes, alignment);
             }
 
