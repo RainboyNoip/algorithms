@@ -36,3 +36,5 @@ unitest/test
 
 *.dot
 *.png
+
+[0-9]*.cpp
