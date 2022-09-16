@@ -11,13 +11,14 @@
 #include <algorithm>
 
 
+namespace rainboy {
+
 //>>>>>>>>>>>>>>>>>>>> iterator_wrapper
 
 
 //<<<<<<<<<<<<<<<<<<<< iterator_wrapper end
 
 //>>>>>>>>>>>>>>>>>>>> iteratoriterator
-namespace rainboy {
     namespace ITER_WRAPPER {
 
 
