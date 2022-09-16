@@ -38,3 +38,9 @@ unitest/test
 *.png
 
 [0-9]*.cpp
+
+# test library
+catch_amalgamated.cpp
+catch_amalgamated.hpp
+
+build/
