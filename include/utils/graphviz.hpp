@@ -13,8 +13,10 @@ namespace DOT {
 
 namespace fs = std::filesystem;
 
+// =======================> 工具函数 与工具类
 namespace dot_utils {
 
+    //给字符串添加包围的字符 abc -> "abc"
     std::string quoted(const std::string & quoted,char quote){
         return quote + quoted + quote;
     }
@@ -101,6 +103,7 @@ enum class graphviz_type {
     digraph,    //有向图
 };
 
+//有向图,无向图的 全局值
 auto constexpr GRAPH = graphviz_type::graph;
 auto constexpr DIGRAPH = graphviz_type::digraph;
 auto constexpr UNDI= graphviz_type::graph;
@@ -110,10 +113,10 @@ auto constexpr DIRECT = graphviz_type::digraph;
 
 
 enum class gType : int {
-  edge,
-  node,
-  graph,
-  cluster
+  edge, // 边
+  node, // 点
+  graph,// 图
+  cluster // 子图
 };
 
 constexpr auto E = gType::edge;
@@ -140,6 +143,7 @@ enum class dot_attrs {
     label       //ENGC std::string
 };
 
+// 是否是gType, E N G C 中的一种
 template<typename ... U>
     requires (std::same_as<U, gType> && ...) && (sizeof...(U) > 0)
 constexpr bool anyofGtype(gType First,U... type){
@@ -147,6 +151,7 @@ constexpr bool anyofGtype(gType First,U... type){
     return ( (First == type) || ...);
 }
 
+//是否是 dot 的属性,color, label 中的一种
 template<typename ... U>
     requires (std::same_as<U, dot_attrs> && ...) && (sizeof...(U) > 0)
 constexpr bool anyofDotAttr(dot_attrs First,U... type){
@@ -154,23 +159,29 @@ constexpr bool anyofDotAttr(dot_attrs First,U... type){
     return ( (First == type) || ...);
 }
 
+// 检查 
 template<gType type,dot_attrs attr,typename ValueType>
 constexpr bool validate_attr(){
     using enum dot_attrs;
     switch(attr) {
+        //如果 attr 是 color ,那么 只能用在E N C,且只能是dot_color 中的一种
         case color: return anyofGtype(type,E,N,C) && std::is_same_v<ValueType, dot_color>;
+        // attr ,label 只能用在 ENGC ,且值能转换string
         case label: return anyofGtype(type,E,N,G,C) && std::is_convertible_v<ValueType, std::string>;
     }
     return 0;
 }
 
 //是否把属性转成字符串 带有quote
+// attr 是color可以 quoted_types
 constexpr bool quoted_types(dot_attrs attr){
     using enum dot_attrs;
     return anyofDotAttr(attr, color);
 }
 
+// quote 一个字符串
 std::string quoteMe(dot_attrs attr,const std::string & value){
+    // 是感叹号开头 用 < >
     if( value.length() > 0 && value[0] == '!'){ // TODO ???
         return '<' + value.substr(1) +'>';
     }
@@ -183,6 +194,7 @@ std::string quoteMe(dot_attrs attr,const std::string & value){
 // -----------> value -> string
 template<typename ValueType> requires std::same_as<ValueType, dot_color>
 std::string to_string(ValueType && val){
+    // enum 转字符串
     return std::string(dot_utils::enum_name(val));
 }
 
@@ -195,6 +207,7 @@ template<typename ValueType> requires std::integral<ValueType>
 std::string to_string(ValueType && val){
     return std::to_string(val);
 }
+// =======================> 工具函数 与工具类
 
 // 存属性的容器
 template<gType type>
@@ -231,6 +244,7 @@ public:
 };
 
 struct dot_edge;
+
 //结点的属性
 struct dot_node {
 private:
@@ -243,11 +257,13 @@ public:
     dot_node(std::size_t id) :id{id} 
     {}
 
+    //设置属性
     template<dot_attrs attr,typename ValueType>
     void set(ValueType&& val) {
         m_attr.set<attr>( std::forward<ValueType>(val) );
     }
 
+    // 整个结点转换成 string
     std::string to_dot() const {
         std::string nodeOutput{};
         nodeOutput += dot_utils::quoted(std::to_string(id) ,'"') + m_attr.to_dot();
@@ -436,8 +452,6 @@ public:
 
         return dotScript;
     }
-
-
 };
 
 } // end namespace DOT

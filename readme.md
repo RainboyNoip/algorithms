@@ -13,6 +13,7 @@
 * [目的](#目的)
 * [约定](#约定)
 * [安装与更新](#安装与更新)
+* [轻量库 minial](#轻量库 minial)
 * [文档](#文档)
 * [vim 自动补全](#vim-----)
   + [0. 安装方法](#0-----)
@@ -116,6 +117,9 @@ include
 ├── random.hpp
 └── utils.hpp
 ```
+## 轻量库 minial
+
+[轻量库 minial](./minimal/readme.md)
 
 ## vim 自动补全
 
@@ -156,5 +160,5 @@ let g:global_email = '<your email>'
 
 ## TanksFor
 
-- [GitHub - sharkdp/dbg-macro: A dbg(…) macro for C++](https://github.com/sharkdp/dbg-macro)
+- [GitHub - sharkdp/dbg-macro: A dbg(…) macro for C++](htps://github.com/sharkdp/dbg-macro)
 - [agauniyal/rang: A Minimal, Header only Modern c++ library for terminal goodies 💄✨](https://github.com/agauniyal/rang)
