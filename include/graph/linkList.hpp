@@ -84,6 +84,8 @@ public:
         h[u] = edge_cnt++;
     }
 
+    int get_edge_cnt() const { return edge_cnt;}
+
     void add2(int u,int v,int w=0){
         add(u,v,w);
         add(v,u,w);

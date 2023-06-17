@@ -1,6 +1,7 @@
 /*  Interface to the [GraphViz graphing](http://www.graphviz.org/content/dot-language) tool */
 #pragma one
 #include <string>
+#include <map>
 #include <iostream>
 #include <fstream>
 #include <string_view>
@@ -159,38 +160,6 @@ constexpr bool anyofDotAttr(dot_attrs First,U... type){
     return ( (First == type) || ...);
 }
 
-// 检查 
-template<gType type,dot_attrs attr,typename ValueType>
-constexpr bool validate_attr(){
-    using enum dot_attrs;
-    switch(attr) {
-        //如果 attr 是 color ,那么 只能用在E N C,且只能是dot_color 中的一种
-        case color: return anyofGtype(type,E,N,C) && std::is_same_v<ValueType, dot_color>;
-        // attr ,label 只能用在 ENGC ,且值能转换string
-        case label: return anyofGtype(type,E,N,G,C) && std::is_convertible_v<ValueType, std::string>;
-    }
-    return 0;
-}
-
-//是否把属性转成字符串 带有quote
-// attr 是color可以 quoted_types
-constexpr bool quoted_types(dot_attrs attr){
-    using enum dot_attrs;
-    return anyofDotAttr(attr, color);
-}
-
-// quote 一个字符串
-std::string quoteMe(dot_attrs attr,const std::string & value){
-    // 是感叹号开头 用 < >
-    if( value.length() > 0 && value[0] == '!'){ // TODO ???
-        return '<' + value.substr(1) +'>';
-    }
-    if( quoted_types(attr) )
-        return dot_utils::quoted(value, '"');
-    return value;
-}
-
-
 // -----------> value -> string
 template<typename ValueType> requires std::same_as<ValueType, dot_color>
 std::string to_string(ValueType && val){
@@ -207,6 +176,48 @@ template<typename ValueType> requires std::integral<ValueType>
 std::string to_string(ValueType && val){
     return std::to_string(val);
 }
+
+//字符 转字符串
+template<typename ValueType>
+    requires std::same_as<std::decay_t<ValueType>, char>
+std::string to_string(ValueType && val){
+    //TODO 这里要改成 quoteMe
+    return std::string(1,val);
+}
+// -----------> value -> string -- END
+
+// 检查 
+template<gType type,dot_attrs attr,typename ValueType>
+constexpr bool validate_attr(){
+    using enum dot_attrs;
+    switch(attr) {
+        //如果 attr 是 color ,那么 只能用在E N C,且只能是dot_color 中的一种
+        case color: return anyofGtype(type,E,N,C) && std::is_same_v<ValueType, dot_color>;
+        // attr ,label 只能用在 ENGC ,且值能转换string
+        case label: return anyofGtype(type,E,N,G,C); // TODO 约束 可以执行to_string && { }
+    }
+    return 0;
+}
+
+//是否把属性转成字符串 带有quote
+// attr 是color可以 quoted_types
+constexpr bool quoted_types(dot_attrs attr){
+    using enum dot_attrs;
+    return anyofDotAttr(attr, color,label);
+}
+
+// quote 一个字符串
+std::string quoteMe(dot_attrs attr,const std::string & value){
+    // 是感叹号开头 用 < >
+    if( value.length() > 0 && value[0] == '!'){ // TODO ???
+        return '<' + value.substr(1) +'>';
+    }
+    if( quoted_types(attr) )
+        return dot_utils::quoted(value, '"');
+    return value;
+}
+
+
 // =======================> 工具函数 与工具类
 
 // 存属性的容器
@@ -293,7 +304,9 @@ struct dot_edge {
         std::string edgeLink = "--";
         if constexpr (type == graphviz_type::digraph)
             edgeLink[1] = '>';
+
         std::string edgeOutput{};
+
         edgeOutput += "  " + dot_utils::quoted(std::to_string(this->nodeOne.id) ,'"') 
             + ' ' + edgeLink + ' '
             + dot_utils::quoted(std::to_string(this->nodeTwo.id), '"')
@@ -311,7 +324,12 @@ class graphviz {
 private:
 
     fs::path graphviz_path = "/usr/bin/dot";
-    std::unordered_map<std::size_t, dot_node> nodes; //存点
+    // std::unordered_map<std::size_t, dot_node> nodes; //存点
+
+    // 为什么不用unordered_map , unordered_map 输出的时候,从大到小
+    // map 从小到大
+    std::map<std::size_t, dot_node> nodes; //存点
+
     std::list<dot_edge> edges; //存边
                                //
     dot_attributes<G> graph_attr;
@@ -327,10 +345,17 @@ public:
 
     //添加一个点
     dot_node & addNode(std::size_t idx){
-        if( nodes.find(idx) == nodes.end()){ //没有找到就创建
+        if( !hasNode(idx) ){ //没有找到就创建
             nodes.emplace(idx,idx);
         }
         return nodes.find(idx)->second;
+    }
+
+    //是否有点
+    bool hasNode(std::size_t idx){
+        if( nodes.find(idx) == nodes.end())
+            return false;
+        return true;
     }
 
     //添加一个点
@@ -361,8 +386,9 @@ public:
     }
 
     template<typename Node>
-        requires std::same_as<Node, dot_node>
+        requires std::same_as<std::decay_t<Node>, dot_node>
     dot_edge & addEdge(Node&& n1,std::size_t n2){
+        edges.emplace_back(n1,addNode(n2));
     }
 
     //template<typename Node>

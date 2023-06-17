@@ -43,11 +43,10 @@
 #define MAXLevel2 7
 #endif
 
-namespace rainboy {
+typedef std::integral_constant<size_t, 1000005> MAXN; // 最多点的数量
+typedef std::integral_constant<size_t, 1000005> MAXE; // 最多边的数量
 
-
-//typedef std::integral_constant<size_t, 1000005> MAXN; // 最多点的数量
-//typedef std::integral_constant<size_t, 1000005> MAXE; // 最多边的数量
+namespace RALGO {
 
 // 加上 std::cin std::cout
 //[（acm）C++加速输入的几种方法_hebtu666-CSDN博客](https://blog.csdn.net/hebtu666/article/details/107269428)
