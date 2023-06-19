@@ -1,5 +1,6 @@
 /**
- * @desc 提花类似于 python Popen的功能,需要c++17
+ * 抄自 : https://github.com/arun11299/cpp-subprocess
+ * @desc 提供类似于 python Popen的功能,需要c++17
  *
  * 使用手册:
  *  

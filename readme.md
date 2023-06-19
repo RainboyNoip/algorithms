@@ -26,7 +26,7 @@
 
 ## 目的
 
-受[xtaci/algorithms: Algorithms & Data structures in C++.](https://github.com/xtaci/algorithms) 启发，把写题目用到的算法与数据结构写出来，用于：
+<!-- 受[xtaci/algorithms: Algorithms & Data structures in C++.](https://github.com/xtaci/algorithms) 启发，把写题目用到的算法与数据结构写出来，用于：-->
 
 1. 快速写题目。
 2. 个人算法总结
@@ -86,40 +86,23 @@ bin
 
 功能分类
 
+每个源文件都有使用方法的说明
 
 - [常用算法](./include/algorithms)
-  - [二分查找](./include/algorithms/binary_search.hpp)
+  - [fastIO 快速输入输出](./include/fastIO.hpp) `fastIO.hpp`
+  - [二分查找](./include/algorithms/binary_search.hpp) `algorithms/binary_search.hpp`
 - [图](./include/graph)
   - [linkList.hpp 链式向量星,图的基本存储](./include/graph/linkList.hpp)
   - [edgeArray.hpp 边集数组](./include/graph/edgeArray.hpp)
   - [bipartile_graph_color.hpp 二分图染色,无奇环判定](./include/graph/bipartile_graph_color.hpp)
   - [tarjan_scc.hpp 强连通分量](./include/graph/tarjan_scc.hpp)
-
-```
-include
-├── algorithms 常用算法
-│   └── binary_search.hpp
-├── math 数学
-│   └── bignumber.hpp
-├── tree 树
-│   └── 
-├── graph 图
-│   ├── edgeArray.hpp   边集数组
-│   └── linkList.hpp
-├── utils 工具
-│   └── 
-├── algorithms.hpp
-├── allocator.hpp
-├── base.hpp
-├── linked_forward_start.hpp
-├── math.hpp
-├── random_data.hpp
-├── random.hpp
-└── utils.hpp
-```
-## 轻量库 minial
-
-[轻量库 minial](./minimal/readme.md)
+- [工具](./include/utils)
+  - [输出调试](./include/utils/debug.hpp) `utils/debug.hpp`
+  - [输出调试](./include/utils/dbg.h) `utils/dbg.h` 👉 [使用方法](https://github.com/sharkdp/dbg-macro)
+  - [table](./include/utils/table.hpp) `utils/table.hpp` 把数据按表格的形式输出,通常用于调试
+  - [输出调试:log](./include/utils/log.hpp) `utils/log.hpp` 一种带guard的输出调试
+  - [graphviz](./include/utils/graphviz.hpp) `utils/graphviz.hpp` 生成graphviz dot图
+  - [程序调用 subprocess](./include/utils/subprocess.hpp) `utils/subprocess.hpp` 实现类似于python的popen函数,用于c++调用其它的程序
 
 ## vim 自动补全
 
@@ -162,3 +145,4 @@ let g:global_email = '<your email>'
 
 - [GitHub - sharkdp/dbg-macro: A dbg(…) macro for C++](htps://github.com/sharkdp/dbg-macro)
 - [agauniyal/rang: A Minimal, Header only Modern c++ library for terminal goodies 💄✨](https://github.com/agauniyal/rang)
+- [arun11299/cpp-subprocess: Subprocessing with modern C++](https://github.com/arun11299/cpp-subprocess)
