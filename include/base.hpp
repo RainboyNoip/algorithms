@@ -33,59 +33,10 @@
 #include <tuple>
 #include <memory_resource>
 
-//最大数据等级1
-#ifndef MAXLevel1 
-#define MAXLevel1 7
+#ifndef maxn
+#define maxn 1000007
 #endif
 
-//最大数据等级2
-#ifndef MAXLevel2
-#define MAXLevel2 7
+#ifndef maxe
+#define maxe 2000007
 #endif
-
-typedef std::integral_constant<size_t, 1000005> MAXN; // 最多点的数量
-typedef std::integral_constant<size_t, 1000005> MAXE; // 最多边的数量
-
-namespace RALGO {
-
-// 加上 std::cin std::cout
-//[（acm）C++加速输入的几种方法_hebtu666-CSDN博客](https://blog.csdn.net/hebtu666/article/details/107269428)
-struct quick_io {
-    quick_io(){
-	    std::ios::sync_with_stdio(false);
-        std::cin.tie(nullptr);
-    }
-};
-
-//计算 题目的数量级
-constexpr std::size_t __convDataLeveL(unsigned int l){
-    std::size_t L = 1;
-    for(int i=1;i<=l;++i) L *= 10;
-    return L + 5;
-}
-
-template<unsigned int level = 7>
-struct DataLevelImpl
-{
-    static constexpr std::size_t value = __convDataLeveL(level);
-};
-
-template<unsigned int level = 7>
-constexpr auto & DataLevel = DataLevelImpl<level>::value;
-
-//所有算法类的基类
-template<unsigned int level1, unsigned int level2>
-class __Base {
-public:
-    //算法数据等级
-    constexpr static std::size_t m_DataLevel = DataLevel<level1>;
-    constexpr static std::size_t m_DataLevel2 = DataLevel<level2>;
-};
-
-template<unsigned int level1>
-class __Base<level1,0> {
-    constexpr static std::size_t m_DataLevel = DataLevel<level1>;
-};
-
-
-} //namespace rainboy

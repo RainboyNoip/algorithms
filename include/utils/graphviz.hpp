@@ -1,4 +1,25 @@
 /*  Interface to the [GraphViz graphing](http://www.graphviz.org/content/dot-language) tool */
+/**
+ * 如何使用:
+ * graphviz mygh; //创建一个图
+ * dot_node &n1 = mygh.addNode(1);
+ * dot_node &n2 = mygh.addNode(2); //添加点,返回一个点的引用
+ * mygh.addEdge(dot_node &n1,dot_node &n2);//添加一条边,注意这里是引用传递
+ * DOT::node a = mygh.addNode(1) ;//添加一个节点1,并反回一个点
+ * bool mygh.hasNode(1)  是否存在结点1
+ * mygh.to_dot() 转成dot语言
+ * mygh.output() 输出成png文件
+ * std::site_t mygh.nodeCount() 结点的数量
+ *
+ * dot_edge mygh.addEdge(dot_node n1 ,dot_node n2) 添加节点n1,n2,并返回一条边
+ * dot_edge edge;
+ * edge.set<color>("red") //设置边的属性
+ * edge.set<label>("1") //设置边的属性:label
+ * mygh.set 
+ * mygh.setNodeAttributes<color>("red") 设置全局的点属性
+ * mygh.setEdgeAttributes<label>("1") 设置全局的边属性
+ *
+ */
 #pragma one
 #include <string>
 #include <map>
@@ -8,7 +29,6 @@
 #include <unordered_map>
 #include <list>
 #include <filesystem>
-
 
 namespace DOT {
 
@@ -34,7 +54,7 @@ namespace dot_utils {
     }
 
     template <typename Enum, auto...vs>
-    constexpr auto get_enumerator_names(std::index_sequence<vs...>) {
+   constexpr auto get_enumerator_names(std::index_sequence<vs...>) {
         return get_enumerator_names_impl<static_cast<Enum>(vs)...>();
     }
 
@@ -161,6 +181,18 @@ constexpr bool anyofDotAttr(dot_attrs First,U... type){
 }
 
 // -----------> value -> string
+template<typename T>
+concept to_string_able =  requires(T&& t) 
+{
+    std::to_string(t);
+};
+
+template<typename ValueType> requires to_string_able<ValueType>
+std::string to_string(ValueType && val){
+    // enum 转字符串
+    return std::to_string(val);
+}
+
 template<typename ValueType> requires std::same_as<ValueType, dot_color>
 std::string to_string(ValueType && val){
     // enum 转字符串
@@ -389,12 +421,14 @@ public:
         requires std::same_as<std::decay_t<Node>, dot_node>
     dot_edge & addEdge(Node&& n1,std::size_t n2){
         edges.emplace_back(n1,addNode(n2));
+        return edges.back();
     }
 
     //template<typename Node>
         //requires std::same_as<Node, dot_node>
     dot_edge & addEdge(dot_node& n1,dot_node& n2){
         edges.emplace_back(n1,n2);
+        return edges.back();
     }
 
     std::size_t edgeCount() const {

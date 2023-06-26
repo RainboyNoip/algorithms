@@ -1,7 +1,13 @@
 /**
 * 表格对象，可以进行表格的输出
 * Author:Rainboy
-*
+*   Tools::Table t; //创建一个table
+*   
+*   api
+*   t.add_row(i,j,k,l,m...) ;添加一行
+*   t.copy_row(std::vector<T> &v) 将vecotr 元素作为新的一行
+*   t.add_row() //创建空行 
+*   t.push(t) //在最后一行添加一元素
 */
 
 #include <string>
@@ -10,7 +16,7 @@
 #include <vector>
 #include <iostream>
 
-#include "color.hpp"
+#include "utils/color.hpp"
 
 // =========== table 
 // 实现的功能
@@ -57,6 +63,19 @@ namespace Tools {
         add_row(Args... args){
             table_.emplace_back();
             ((table_.back().emplace_back(std::forward<Args>(args))),...);
+        }
+
+
+        //添加空行
+        void add_row() {
+            table_.emplace_back();
+        }
+
+        template<typename T>
+        void push(T && t) {
+            if( table_.empty() )
+                add_row();
+            table_.back().emplace_back( std::forward<T>(t) );
         }
 
         //template<typename T,typename  U = std::vector<T> >

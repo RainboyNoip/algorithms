@@ -1,6 +1,6 @@
 #!/bin/env python3
-# 作用: 过能include 所有的头 包含进行转成一个文件
-#
+# 作用: 把include 所有的头 包含进行转成一个文件
+# 原理
 #
 #
 #
@@ -51,8 +51,9 @@ algorithm_include_path = os.path.abspath(
             '../include'
             ))
 
-print(algorithm_include_path)
+verbose('algorithm库目录 ',algorithm_include_path)
 
+#读取文件
 def readFile(fileName):
     with open(fileName) as f:
         return f.read().splitlines()
@@ -67,17 +68,19 @@ include_file_set = set()
 def tran_file(fileName):
     global out_str
     for line in readFile(fileName):
-        if line.strip() == "#pragma once":
+        if line.strip() == "#pragma once": # 去除 #pragma once 行
             continue;
         # matchObj = re.match('^#include\ ?"(\w+|/)+"$',line,re.I)
-        matchObj = re.match('^#include\ ?"([\w/\.]+)"\s*$',line,re.I)
+        matchObj = re.match('^#include\ ?"([\w/\.]+)"[\s\S]*$',line,re.I)
         if matchObj:
             include_file = matchObj.group(1)
             real_file_path = os.path.join(algorithm_include_path,include_file)
-            if os.path.exists(real_file_path) :
+            if os.path.exists(real_file_path) : # 存在这个文件
+                # print(real_file_path)
+                out_str += '//---> '+ line +'\n' # 注释掉
                 if real_file_path not in include_file_set:
                     include_file_set.add(real_file_path)
-                    tran_file(real_file_path)
+                    tran_file(real_file_path) 
             else:
                 out_str += line +'\n'
         else:
