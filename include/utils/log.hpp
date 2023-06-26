@@ -1,104 +1,49 @@
-#ifdef LOG_TRACE
-//使用方法见 https://blog.roj.ac.cn/学习笔记/tinyasync/first.html
+/**
+ * 
+ * 提供多种LOG 的使用
+ *
+ * log(a,b,c) 输出
+ * [#12]: a=1,b=2,c=3
+ *
+ * 原理见 https://cpphub.roj.ac.cn/ 奇技淫巧/宏调试输出技巧
+ */
 
-#include <cstdio>
-#include <cstdarg>
+#include "base.hpp"
 
-#include <string>
-#include <string_view>
-#include <vector>
-#include <map>
+//颜色 TODO
 
-#define LOG_CAT_(a, b) a##b
-#define LOG_CAT(a, b) LOG_CAT_(a, b)
-#define LOG_GUARD(...) log_prefix_guad LOG_CAT(log_prefix_guad_, __LINE__)(__VA_ARGS__)
-#define LOG_LOG(...) \
-    do                     \
-    {                      \
-        log(__VA_ARGS__);  \
-        printf("\n");      \
-    } while (0)
-#define LOG_LOG_NNL(...) log(__VA_ARGS__)
+namespace {
+
+    using namespace std::literals;
+    constexpr auto DEBUG_GREEN = "\033[1;32m"sv;
+    constexpr auto DEBUG_YELLOW= "\033[1;33m"sv;
+    constexpr auto DEBUG_ORANGE= "\033[1;34m"sv;
+    constexpr auto DEBUG_PURPLE= "\033[1;35m"sv;
+    constexpr auto DEBUG_BLUE  ="\033[1;36m"sv;
+    constexpr auto DEBUG_COLOR_END = "\033[0m"sv;
+}
 
 
+#define __LOG_INFO__   "[" << '#' << __LINE__  << "]: "
 
-    inline std::vector<std::string> log_prefix;
-
-    struct log_prefix_guad
-    {
-        std::size_t l;
-
-        log_prefix_guad(char const *fmt, ...) : l(0)
-        {
-
-            char buf[1000];
-            va_list args;
-            va_start(args, fmt);
-            vsnprintf(buf, 1000, fmt, args);
-            va_end(args);
-
-            buf[1000 - 1] = 0;
-
-            l = log_prefix.size();
-
-            log_prefix.emplace_back(buf);
-        }
-
-        ~log_prefix_guad()
-        {
-            printf(">>>>>>>>>");
-            printf("l=%d,",l);
-            printf("\n");
-            printf("size %d,",log_prefix.size());
-            if (l < log_prefix.size())
-            {
-                log_prefix.resize(l);
-            }
-        }
-    };
-
-    inline void log(char const *fmt, ...)
-    {
-        for (auto &p : log_prefix)
-        {
-            printf("%s", p.c_str());
-        }
-        va_list args;
-        va_start(args, fmt);
-        vprintf(fmt, args);
-        va_end(args);
-    }
-
+#ifdef DEBUG
+#define log(...) std::cerr << DEBUG_GREEN << __LOG_INFO__ << DEBUG_COLOR_END; __debug_with_arg_name(std::cerr,#__VA_ARGS__,__VA_ARGS__)
 #else
+#define log(...)
+#endif
 
-#define LOG_LOG(...) \
-    do                     \
-    {                      \
-    } while (0)
-
-
-    struct log_prefix_guad
+template<typename T1,typename... T2>
+void __debug_with_arg_name(std::ostream & O , std::string_view args_str, T1&& arg1,T2&&... args) 
+{
+    auto p1 = args_str.find_first_of(",");
+    O << args_str.substr(0,p1) << "=" << arg1 ;
+    if constexpr (sizeof...(args) == 0)
     {
-        log_prefix_guad(std::string_view)
-        {
-        }
-    };
-
-    inline void log(char const *fmt, ...)
-    {
+        cout << '\n';
+        return;
     }
 
+    O << ',';
+    __debug_with_arg_name(O, args_str.substr(p1+1),std::forward<T2>(args)...);
+}
 
-#define LOG_GUARD(...) \
-    do                       \
-    {                        \
-    } while (0)
-#define LOG_LOG(...) \
-    do                     \
-    {                      \
-    } while (0)
-#define LOG_LOG_NNL(...) \
-    ldo {}                     \
-    while (0)
-
-#endif // LOG_TRACE

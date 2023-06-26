@@ -13,7 +13,6 @@
 * [目的](#目的)
 * [约定](#约定)
 * [安装与更新](#安装与更新)
-* [轻量库 minial](#轻量库 minial)
 * [文档](#文档)
 * [vim 自动补全](#vim-----)
   + [0. 安装方法](#0-----)
@@ -88,17 +87,21 @@ bin
 
 每个源文件都有使用方法的说明
 
-- [常用算法](./include/algorithms)
-  - [fastIO 快速输入输出](./include/fastIO.hpp) `fastIO.hpp`
-  - [二分查找](./include/algorithms/binary_search.hpp) `algorithms/binary_search.hpp`
+- [常用算法](./include/algo)
+  - [fastIO 快速输入输出](./include/algo/fastIO.hpp) `fastIO.hpp`
+  - [二分查找](./include/algo/binary_search.hpp) `algorithms/binary_search.hpp`
+  - [离散化 discrete](./include/algo/discrete.hpp)
+  - [排列组合 combination](./include/algo/combination.hpp)
 - [图](./include/graph)
   - [linkList.hpp 链式向量星,图的基本存储](./include/graph/linkList.hpp)
   - [edgeArray.hpp 边集数组](./include/graph/edgeArray.hpp)
   - [bipartile_graph_color.hpp 二分图染色,无奇环判定](./include/graph/bipartile_graph_color.hpp)
   - [tarjan_scc.hpp 强连通分量](./include/graph/tarjan_scc.hpp)
 - [工具](./include/utils)
+  - [输出调试](./include/utils/log.hpp) `utils/log.hpp`
   - [输出调试](./include/utils/debug.hpp) `utils/debug.hpp`
   - [输出调试](./include/utils/dbg.h) `utils/dbg.h` 👉 [使用方法](https://github.com/sharkdp/dbg-macro)
+  - [随机数生成] TODO
   - [table](./include/utils/table.hpp) `utils/table.hpp` 把数据按表格的形式输出,通常用于调试
   - [输出调试:log](./include/utils/log.hpp) `utils/log.hpp` 一种带guard的输出调试
   - [graphviz](./include/utils/graphviz.hpp) `utils/graphviz.hpp` 生成graphviz dot图,[graphviz官方文档](https://graphviz.org/documentation/)

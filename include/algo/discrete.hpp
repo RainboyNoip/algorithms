@@ -1,0 +1,71 @@
+/**
+ * 离散化 discretization 
+ * TODO 是否不使用stl的函数
+ *  - unique
+ *  - lower_bound
+ *
+ */
+#include "base.hpp"
+
+template<std::size_t N = maxn>
+struct discrete {
+    int a[maxn];
+    int idx{0};
+    int * last_unique_ptr = nullptr; //最后一个位置
+
+    void init() {
+        idx = 0;
+        last_unique_ptr = nullptr;
+    }
+
+    void push(int v) {
+        a[++idx] = v;
+    }
+
+    int unique_size () const {
+#ifdef DEBUG
+        if(last_unique_ptr == nullptr)
+            throw std::runtime_error("must call discrete(),before use unique_size()");
+#endif
+        return last_unique_ptr - (a+1);
+    }
+
+    //对存入的值进行离散化
+    void decrete() {
+        std::sort(a+1,a+1+idx);
+        last_unique_ptr= std::unique(a+1,a+1+idx);
+    }
+
+
+#if 0
+    //对数据arr,从1到n进行离散化
+    template<std::size_t size>
+    void pre_work(int arr[size],int n) {
+        pre_work(a+1, a+1+n);
+    }
+
+    template<typename Iter>
+        requires std::is_same_v<typename std::iterator_traits<Iter>::value_type, int>
+    void pre_work(Iter begin ,Iter end) {
+        std::sort(begin,end); //从小到大排序
+        for( ; begin != end; ++begin)
+            a[++idx] = *begin;
+    }
+#endif
+    //查询x对应的值是
+    int query(int x) {
+#ifdef DEBUG
+        if(last_unique_ptr == nullptr)
+            throw std::runtime_error("must call discrete(),before use query(x)");
+#endif
+        
+        //找到第一个>=x的位置
+        return std::lower_bound(a+1, last_unique_ptr,x) - a;
+    }
+
+    int operator[](int x) {
+        return query(x);
+    }
+
+
+};
