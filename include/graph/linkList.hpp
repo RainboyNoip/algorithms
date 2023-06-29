@@ -47,16 +47,59 @@ struct edge {
     operator int() { return v; }
 };
 
+//没有边权的边
+struct edge_no_w {
+    int v,next;
+    operator int() { return v; }
+};
+
+
+fast_out & operator<<(fast_out & out ,const edge & e) {
+    out.println(e.v,e.w);
+    return out;
+}
+
+fast_out & operator<<(fast_out & out ,const edge_no_w & e) {
+    out.println(e.v);
+    return out;
+}
+
+
+template<typename T>
+requires std::is_same_v<T, edge> || std::is_same_v<T, edge_no_w>
+void make_edge(T & e,int v,int w,int next) {
+    if constexpr ( std::is_same_v<T, edge> )
+        e.v = v,e.w = w,e.next = next;
+    else if constexpr ( std::is_same_v<T, edge_no_w> )
+        e.v = v,e.next = next;
+}
+
+template<typename T>
+requires std::is_same_v<T, edge> || std::is_same_v<T, edge_no_w>
+auto make_edge(int v,int w,int next) -> T {
+    if constexpr ( std::is_same_v<T, edge> )
+        return {v,w,next};
+    else if constexpr ( std::is_same_v<T, edge_no_w> )
+        return {v,next};
+}
+
+//图的类型
+
+struct direct_graph {}; //有向图
+struct undirect_graph {}; // 无向图
+
 
 /**
 * 说明:边的编号从0的开始
 */
-template<std::size_t V_CNT=maxn,std::size_t E_CNT=maxe>
+template<typename GraphType,typename Edge = edge,std::size_t V_CNT=maxn,std::size_t E_CNT=maxe>
 class linkList {
 
 private:
+
+    using type = GraphType;
     
-    edge e[V_CNT];
+    Edge e[V_CNT];
     int h[E_CNT],edge_cnt=0;
 
 public:
@@ -72,9 +115,14 @@ public:
         for(int i = h[u] ; i !=-1;i = e[i].next)
             func(e[i].u,e[i].v,e[i].w); //u v w
     }
-    void add(int u,int v,int w=0){
-        e[edge_cnt] = {v,w,h[u]};
+
+    inline void emplace_back(int u,int v,int w = 0) {
+        make_edge(e[edge_cnt], v, w, h[u]);
         h[u] = edge_cnt++;
+    }
+
+    inline void add(int u,int v,int w=0){
+        emplace_back(u,v,w);
     }
 
     int get_edge_cnt() const { return edge_cnt;}
@@ -88,7 +136,7 @@ public:
     int head(int u) const{ return h[u]; }
 
     //返回第i条边的编号
-    edge& operator[](int i){ return e[i]; }
+    Edge& operator[](int i){ return e[i]; }
 
     //for (auto& e : c)  --> for(auto i = c.begin() ; i!= c.end() ; i++)
     /*(since C++20)
@@ -121,7 +169,7 @@ public:
             return *this;
         }
 
-        edge& operator*(){
+        Edge& operator*(){
             return self->e[idx];
         }
     };
@@ -136,11 +184,53 @@ public:
         return {this,u};
     }
 
+
+    // TODO 遍历所有的点
+    // 只能假定认为点是连续的,且从1开始?
+    // auto begin() 
 };
 
 
-// using linkList = linkList<maxn,maxe>;
+template<typename T>
+struct linklist_traits {};
 
+template<typename GraphType,typename Edge,std::size_t V_CNT, std::size_t E_CNT>
+struct linklist_traits<linkList<GraphType,Edge,V_CNT,E_CNT>> {
+    using type = GraphType;
+
+    static constexpr bool is_direct = std::is_same_v<GraphType, direct_graph>;
+    static constexpr bool is_undirect = std::is_same_v<GraphType, undirect_graph>;
+
+};
+
+
+// fast_io 读取数据
+
+template<typename GraphType,typename Edge,std::size_t V_CNT, std::size_t E_CNT>
+void operator>>(fast_in & in,linkList<GraphType,Edge, V_CNT, E_CNT> & e) {
+    int u,v,w=0;
+    if constexpr ( std::is_same_v<Edge, edge>) //有向图
+        in.read(u,v,w);
+    else if constexpr (std::is_same_v<Edge,edge_no_w>)
+        in.read(u,v);
+
+    if constexpr ( std::is_same_v<GraphType, direct_graph>) //有向图
+        e.add(u,v,w);
+    else if constexpr ( std::is_same_v<GraphType, undirect_graph>)//无向图
+        e.add2(u,v,w);
+}
+
+//无向图,有边权
+using graph = linkList<undirect_graph,edge,maxn,maxe>;
+
+//无向图,无边权
+using graph_nw = linkList<undirect_graph,edge_no_w,maxn,maxe>;
+
+//有向图,有边权
+using dirgraph = linkList<direct_graph,edge,maxn,maxe>;
+
+//有向图,无边权
+using dirgraph_now = linkList<direct_graph,edge_no_w,maxn,maxe>;
 
 //如何 使 struct binding 支持自己的类型
 //https://stackoverflow.com/a/45898931
@@ -154,5 +244,19 @@ namespace std {
     auto get(edge const& x) {
         if      constexpr(I == 0) return x.v;
         else if constexpr(I == 1) return x.w;
+    }
+
+    template <> struct tuple_size<edge_no_w> : std::integral_constant<size_t, 1> { };
+    template <> struct tuple_element<0,edge_no_w> { using type = int; };
+
+    template <std::size_t I>
+    auto get(edge_no_w const& x) {
+       // return x.v;
+       static_assert(I==0,"I must eq 0!");
+    }
+
+    template <>
+    auto get<0>(edge_no_w const& x) {
+       return x.v;
     }
 }

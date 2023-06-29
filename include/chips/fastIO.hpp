@@ -1,6 +1,30 @@
+/**
+ *
+ * 自己实现的cin,cout,高速读取数据
+ * fast_in 使用,全局实例 in,使用
+ *  in(a)
+ *  in(a,b,c)
+ *  in >> a >> b >> c;
+ *                                 
+ *  int a[10]
+ *  in(a+1,a+1+10);
+ *                                 
+ *                                 
+ * fast_out 使用,全局实例 out
+ * out.print(a)
+ * out.print(a,b,c) //中间带有空格
+ *
+ * out.println(a)
+ * out.println(a,b,c) 中间带有空格,最后换行
+ *
+ * out << a << b << c;
+ * 
+ * int a[10]
+ * out(a+1,a+1+10); //输出数组
+ *
+ *
+ */
 #include "base.hpp"
-
-// 自己实现的cin,cout
 
 constexpr int io_buff_size = 1<<21;
 
@@ -64,6 +88,11 @@ struct fast_in :public fast_io_base  {
         read(n);
         return *this;
     }
+
+    template<typename... T>
+    void operator()(T&... args){
+        read(args...);
+    }
 };
 
 struct fast_out : public fast_io_base {
@@ -115,6 +144,13 @@ struct fast_out : public fast_io_base {
         }while(--idx);
     }
 
+    template<typename T>
+    void print_sp(T n) {
+        print(n);
+        sp();
+    }
+
+
     //递归边界
     template<typename T>
 #ifdef __cpp_concepts
@@ -122,6 +158,28 @@ struct fast_out : public fast_io_base {
 #endif
     void println(T n) {
         print(n);
+        ln();
+    }
+
+    template<typename Iter>
+        requires std::is_pointer_v<Iter> || requires(Iter it) {
+            {*it};   // it can be dereferenced.
+            {++it};  // it can be incremented.
+        }
+    void print(Iter begin,Iter end) {
+        for( auto i = begin ; i != end ;++i){
+            print(*i);
+            putc(separator_ch);
+        }
+    }
+
+    template<typename Iter>
+        requires std::is_pointer_v<Iter> || requires(Iter it) {
+            {*it};   // it can be dereferenced.
+            {++it};  // it can be incremented.
+        }
+    void println(Iter begin,Iter end) {
+        print(begin,end);
         ln();
     }
 
@@ -163,13 +221,17 @@ struct fast_out : public fast_io_base {
         return *this;
     }
 
-    template<typename T>
-    fast_out & operator<<(T&& a) {
-        print(std::forward<T>(a));
+    inline fast_out & sp() { //输出一个空格
+        putc(' ');
         return *this;
     }
-
 };
 
-fast_in _in;
-fast_out _out;
+// template<typename T>
+fast_out & operator<<(fast_out & out,const int & a) {
+    out.print(a);
+    return out;
+}
+
+fast_in in;
+fast_out out;

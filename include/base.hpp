@@ -20,6 +20,9 @@
  * */
 
 #pragma once
+
+#define __HEADER_BASE_HPP__
+
 #include <cstring>
 #include <iostream>
 #include <map>
@@ -47,3 +50,6 @@
 #ifndef maxe
 #define maxe 2000007
 #endif
+
+#include "utils/yank_adaptor.hpp"
+
