@@ -60,11 +60,27 @@ struct discrete {
 #endif
         
         //找到第一个>=x的位置
-        return std::lower_bound(a+1, last_unique_ptr,x) - a;
+        auto pos = std::lower_bound(a+1, last_unique_ptr,x) - a;
+        if( a[pos] == x)
+            return pos;
+        else 
+            return 0; //返回0 表示没有找到
     }
 
     int operator[](int x) {
         return query(x);
+    }
+
+    int * begin() {
+        return a+1;
+    }
+
+    int * end() {
+#ifdef DEBUG
+        if(last_unique_ptr == nullptr)
+            throw std::runtime_error("must call discrete(),before use end()");
+#endif
+        return last_unique_ptr;
     }
 
 

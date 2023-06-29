@@ -24,7 +24,7 @@ namespace {
 }
 
 
-#define __LOG_INFO__   "[" << '#' << __LINE__  << "]: "
+#define __LOG_INFO__   "[" << "Ln " << __LINE__  << "]: "
 
 #ifdef DEBUG
 #define log(...) std::cerr << DEBUG_GREEN << __LOG_INFO__ << DEBUG_COLOR_END; __debug_with_arg_name(std::cerr,#__VA_ARGS__,__VA_ARGS__)
@@ -33,17 +33,17 @@ namespace {
 #endif
 
 template<typename T1,typename... T2>
+void __debug_with_arg_name(std::ostream & O , std::string_view args_str, T1&& arg1)
+{
+
+    O << args_str<< "=" << arg1 <<  '\n';
+}
+
+template<typename T1,typename... T2>
 void __debug_with_arg_name(std::ostream & O , std::string_view args_str, T1&& arg1,T2&&... args) 
 {
     auto p1 = args_str.find_first_of(",");
-    O << args_str.substr(0,p1) << "=" << arg1 ;
-    if constexpr (sizeof...(args) == 0)
-    {
-        cout << '\n';
-        return;
-    }
-
-    O << ',';
+    O << args_str.substr(0,p1) << "=" << arg1  << ',';
     __debug_with_arg_name(O, args_str.substr(p1+1),std::forward<T2>(args)...);
 }
 

@@ -13,9 +13,9 @@
  * 具体使用见 examples/linkList.cpp
  * 使用:
  *   1. 定义
- * _linkList e1;         //定义一个默认有 10^6个点,10^6个边的 存储结构
- * _linkList<100> e2;    //定义一个有 100个点,10^6个边的 存储结构
- * _linkList<100,100> e3;//定义一个有 100个点,100 个边的 存储结构
+ * linkList e1;         //定义一个默认有 10^6个点,10^6个边的 存储结构
+ * linkList<100> e2;    //定义一个有 100个点,10^6个边的 存储结构
+ * linkList<100,100> e3;//定义一个有 100个点,100 个边的 存储结构
  *
  *   2. 添加边
  * e.add(u,v)
@@ -38,7 +38,6 @@
 
 #include "base.hpp"
 
-namespace RALGO {
 
 //存一条边
 struct edge {
@@ -46,20 +45,14 @@ struct edge {
 
     //当做一个int时,记录的就是当前点
     operator int() { return v; }
-
-    template <std::size_t I>
-    friend auto get(edge const& x) {
-        if      constexpr(I == 0) return x.v;
-        else if constexpr(I == 1) return x.w;
-    }
 };
 
 
 /**
 * 说明:边的编号从0的开始
 */
-template<std::size_t V_CNT,std::size_t E_CNT>
-class _linkList {
+template<std::size_t V_CNT=maxn,std::size_t E_CNT=maxe>
+class linkList {
 
 private:
     
@@ -68,7 +61,7 @@ private:
 
 public:
     
-    _linkList(){	//构造函数
+    linkList(){	//构造函数
         edge_cnt=0;
         memset(h,-1,sizeof(h));
     }
@@ -115,10 +108,10 @@ public:
      */
 
     struct edgePoint {
-        _linkList * self; //指向linkList的指针
+        linkList * self; //指向linkList的指针
         int idx;
 
-        edgePoint(_linkList * l,int edge_idx) : self{l},idx{edge_idx} 
+        edgePoint(linkList * l,int edge_idx) : self{l},idx{edge_idx} 
         {}
 
         bool operator!=(int a){ return idx != a;};
@@ -133,12 +126,11 @@ public:
         }
     };
     struct EdgeIterator {
-        _linkList * self; //指向linkList的指针
+        linkList * self; //指向linkList的指针
         int u; //哪个点周围的点
         edgePoint begin() { return {self,self->h[u]}; }
         int end(){ return -1;}
     };
-
 
     EdgeIterator edges_start_for(int u){
         return {this,u};
@@ -147,16 +139,20 @@ public:
 };
 
 
-using linkList = _linkList<MAXN::value,MAXE::value>;
+// using linkList = linkList<maxn,maxe>;
 
-} //namespace __MY_SELF__NAMESPACE__
-  //
 
 //如何 使 struct binding 支持自己的类型
 //https://stackoverflow.com/a/45898931
 namespace std {
-    template <> struct tuple_size<RALGO::edge> : std::integral_constant<size_t, 2> { };
+    template <> struct tuple_size<edge> : std::integral_constant<size_t, 2> { };
+    template <> struct tuple_element<0,edge> { using type = int; };
+    template <> struct tuple_element<1,edge> { using type = int; };
 
-    template <> struct tuple_element<0,RALGO::edge> { using type = int; };
-    template <> struct tuple_element<1,RALGO::edge> { using type = int; };
+    //解引用 auto [v,w] = e;
+    template <std::size_t I>
+    auto get(edge const& x) {
+        if      constexpr(I == 0) return x.v;
+        else if constexpr(I == 1) return x.w;
+    }
 }

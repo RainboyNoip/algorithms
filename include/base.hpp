@@ -32,7 +32,13 @@
 #include <iomanip>
 #include <tuple>
 #include <string_view>
+#include <functional>
 #include <memory_resource>
+
+
+#ifdef __cpp_concepts
+#include <concepts>
+#endif
 
 #ifndef maxn
 #define maxn 1000007

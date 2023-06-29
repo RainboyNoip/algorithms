@@ -1,5 +1,4 @@
-#ifndef __TYPE_NAME_HPP__
-#define __TYPE_NAME_HPP__
+#pragma once
 
 #include "base.hpp"
 
@@ -30,4 +29,3 @@ namespace rainboy {
 
 } // end namespace rainboy
 
-#endif

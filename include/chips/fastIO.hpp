@@ -1,10 +1,4 @@
-#include <cstdio>
-// #include <cctype>
-
-#ifdef __cpp_concepts
-#include <concepts>
-#endif
-
+#include "base.hpp"
 
 // 自己实现的cin,cout
 
@@ -104,15 +98,11 @@ struct fast_out : public fast_io_base {
     }
 
     //递归边界
-    void print() {}
-
-    template<typename T,typename ...Args>
+    template<typename T>
 #ifdef __cpp_concepts
-    requires 
-    std::conjunction_v<std::is_integral<T>,std::is_integral<Args>...>
-    // std::integral<T> && std::integral<args>...
+    requires std::is_integral_v<T>
 #endif
-    void print(T n,Args... args) {
+    void print(T n) {
         if( n < 0)
             putc('-'),n = -n;
 
@@ -123,8 +113,38 @@ struct fast_out : public fast_io_base {
         do {
             putc(num[idx]);
         }while(--idx);
+    }
+
+    //递归边界
+    template<typename T>
+#ifdef __cpp_concepts
+    requires std::is_integral_v<T>
+#endif
+    void println(T n) {
+        print(n);
+        ln();
+    }
+
+    template<typename T,typename ...Args>
+#ifdef __cpp_concepts
+    requires 
+    std::conjunction_v<std::is_integral<T>,std::is_integral<Args>...>
+    // std::integral<T> && std::integral<args>...
+#endif
+    void print(T n,Args... args) {
+        print(n);
         putc(separator_ch);
         print(args...);
+    }
+    template<typename T,typename ...Args>
+#ifdef __cpp_concepts
+    requires 
+    std::conjunction_v<std::is_integral<T>,std::is_integral<Args>...>
+#endif
+    void println(T n,Args... args) {
+        print(n);
+        putc(separator_ch);
+        println(args...);
     }
 
     template<typename T,typename ...Args>
@@ -140,6 +160,12 @@ struct fast_out : public fast_io_base {
 
     inline fast_out & ln() {
         putc('\n');
+        return *this;
+    }
+
+    template<typename T>
+    fast_out & operator<<(T&& a) {
+        print(std::forward<T>(a));
         return *this;
     }
 
