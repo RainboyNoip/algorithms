@@ -1,12 +1,18 @@
 /**
  *  使用方法
- *  Rf>10 创建一个Range(1,10)
- *  Rf<10 创建一个Range(10,1)
- *  Rf0>10 创建一个Range(0,10)
- *  Rf0<10 创建一个Range(10,0)
- *  Rf1>10 创建一个Range(1,10)
- *  Rf1<10 创建一个Range(10,1)
+ *  R>10 创建一个Range(1,10)
+ *  R<10 创建一个Range(10,1)
+ *  R0>10 创建一个Range(0,10)
+ *  R0<10 创建一个Range(10,0)
+ *  R1>10 创建一个Range(1,10)
+ *  R1<10 创建一个Range(10,1)
+ *  Range(2,10) 创建一个Range(2,10)
+ *  Range(2,10,2) 创建一个[2,4,6,8,10]
  *  int n = 10;
+ *
+ *  ra = Range ra 是Range的缩写
+ *
+ *  还有一个FOR宏
  *  FOR(i, Range(1, n)) {
  *      std::cout << "Iteration: " << i << std::endl;
  *      // 在此处编写要执行的代码
@@ -71,7 +77,7 @@ private:
     int step_;
 };
 
-using R = Range;
+using ra = Range;
 
 //Range工厂类 
 template<int start_>
@@ -81,19 +87,19 @@ struct RangeFactory {
     }
 
     // start_->end
-    Range operator>(int end) {
+    Range operator>(int end) const{
         return Range(start_,end,1);
     }
 
     // n->start_
-    Range operator<(int begin) {
+    Range operator<(int begin) const{
         return Range(begin,start_,-1);
     }
 };
 
-constexpr RangeFactory<1> Rf;
-constexpr RangeFactory<0> Rf0;
-constexpr RangeFactory<1> Rf1;
+constexpr RangeFactory<1> R;
+constexpr RangeFactory<0> R0;
+constexpr RangeFactory<1> R1;
 
 #ifndef FOR
 #define FOR(i, range) \

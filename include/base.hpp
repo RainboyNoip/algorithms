@@ -23,6 +23,7 @@
 
 #define __HEADER_BASE_HPP__
 
+#include <cassert>
 #include <cstring>
 #include <iostream>
 #include <map>
@@ -37,6 +38,7 @@
 #include <string_view>
 #include <functional>
 #include <memory_resource>
+#include <ranges>
 
 
 #ifdef __cpp_concepts
@@ -51,5 +53,6 @@
 #define maxe 2000007
 #endif
 
+#include "chips/fastIO.hpp"
 #include "utils/yank_adaptor.hpp"
 

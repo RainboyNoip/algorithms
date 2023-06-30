@@ -24,6 +24,7 @@
  *
  *
  */
+#pragma once
 #include "base.hpp"
 
 constexpr int io_buff_size = 1<<21;
@@ -99,10 +100,11 @@ struct fast_out : public fast_io_base {
 
     using fast_io_base::buff;
     using fast_io_base::pt;
+    using fast_io_base::ps;
+    // ps 表示可以写的位置
+    // pt 保持末尾不变
 
     int num[65];
-    int idx = 0;
-    char separator_ch{' '};
 
     fast_out()
         :fast_io_base()
@@ -115,23 +117,30 @@ struct fast_out : public fast_io_base {
         flush();
     }
     inline void flush() {
-        fwrite(buff, 1, pt-ps, stdout);
+        if( ps == buff) return;
+        fwrite(buff, 1, ps-buff, stdout);
         ps = buff;
     }
 
     inline void putc(char c) {
         *ps++ = c;
-        if(empty())  {
+        if(empty()) { //empty() 在这里表示可写空间
             flush();
         }
     }
 
+    template<char sep=' '>
+    inline void print() {}
+
+    template<char sep=' '>
+    inline void println() {}
+
     //递归边界
     template<typename T>
-#ifdef __cpp_concepts
-    requires std::is_integral_v<T>
-#endif
-    void print(T n) {
+        requires std::is_integral_v<T>
+    void print_one(T n) {
+        // std::remove_cvref_t<T> n = nn;
+        int idx = 0;
         if( n < 0)
             putc('-'),n = -n;
 
@@ -146,73 +155,61 @@ struct fast_out : public fast_io_base {
 
     template<typename T>
     void print_sp(T n) {
-        print(n);
+        print_one(n);
         sp();
     }
 
-
-    //递归边界
-    template<typename T>
-#ifdef __cpp_concepts
-    requires std::is_integral_v<T>
-#endif
-    void println(T n) {
-        print(n);
-        ln();
-    }
-
-    template<typename Iter>
+    template<char sep = ' ',typename Iter>
         requires std::is_pointer_v<Iter> || requires(Iter it) {
             {*it};   // it can be dereferenced.
             {++it};  // it can be incremented.
         }
     void print(Iter begin,Iter end) {
         for( auto i = begin ; i != end ;++i){
-            print(*i);
-            putc(separator_ch);
+            print_one(*i);
+            putc(sep);
         }
     }
 
-    template<typename Iter>
+    //是一个range,也就是有begin,end
+    template<char sep = ' ',typename Range>
+        requires std::ranges::range<Range>
+    void print(Range& r) {
+        print<sep>(r.begin(),r.end());
+    }
+
+    template<char sep = ' ',typename Iter>
         requires std::is_pointer_v<Iter> || requires(Iter it) {
             {*it};   // it can be dereferenced.
             {++it};  // it can be incremented.
         }
     void println(Iter begin,Iter end) {
-        print(begin,end);
+        print<sep>(begin,end);
         ln();
     }
 
-    template<typename T,typename ...Args>
-#ifdef __cpp_concepts
-    requires 
-    std::conjunction_v<std::is_integral<T>,std::is_integral<Args>...>
-    // std::integral<T> && std::integral<args>...
-#endif
-    void print(T n,Args... args) {
-        print(n);
-        putc(separator_ch);
-        print(args...);
-    }
-    template<typename T,typename ...Args>
-#ifdef __cpp_concepts
-    requires 
-    std::conjunction_v<std::is_integral<T>,std::is_integral<Args>...>
-#endif
-    void println(T n,Args... args) {
-        print(n);
-        putc(separator_ch);
-        println(args...);
+    template<char sep = ' ',typename T,typename ...Args>
+    void print(T&& n,Args&&... args) {
+        print_one(std::forward<T>(n));
+        // if constexpr (sizeof...(args)!= 0)
+            putc(sep);
+        print<sep>(std::forward<Args>(args)...);
     }
 
-    template<typename T,typename ...Args>
-#ifdef __cpp_concepts
-    requires 
-    std::conjunction_v<std::is_integral<T>,std::is_integral<Args>...>
-#endif
-    fast_out & operator()(T n ,Args... args)
+    template<char sep = ' ',typename T,typename ...Args>
+    void println(T&& n,Args&&... args) {
+        print_one(std::forward<T>(n));
+        if constexpr (sizeof...(args)!= 0)
+            putc(sep);
+        else
+            ln(); //换行
+        println<sep>(std::forward<Args>(args)...);
+    }
+
+    template<typename ...Args>
+    fast_out & operator()(Args&&... args)
     {
-        print(n,args...);
+        print(std::forward<Args>(args)...);
         return *this;
     }
 

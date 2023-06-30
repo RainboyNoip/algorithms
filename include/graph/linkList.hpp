@@ -230,7 +230,7 @@ using graph_nw = linkList<undirect_graph,edge_no_w,maxn,maxe>;
 using dirgraph = linkList<direct_graph,edge,maxn,maxe>;
 
 //有向图,无边权
-using dirgraph_now = linkList<direct_graph,edge_no_w,maxn,maxe>;
+using dirgraph_nw = linkList<direct_graph,edge_no_w,maxn,maxe>;
 
 //如何 使 struct binding 支持自己的类型
 //https://stackoverflow.com/a/45898931

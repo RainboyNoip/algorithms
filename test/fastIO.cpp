@@ -1,18 +1,19 @@
 #include <iostream>
-#include <fastIO.hpp>
+#include "base.hpp"
+
 
 
 int main(){
     int a,b,c;
-    _in >> a >> b >> c;
-    _out(a,b,c).ln();
-    // std::cout << " a: " << a<< std::endl;
-    // std::cout << " b: " << b<< std::endl;
-    // std::cout << " c: " << c<< std::endl;
-    _in.read(a,b,c);
-    _out(a,b,c).ln();
-    // std::cout << " a: " << a<< std::endl;
-    // std::cout << " b: " << b<< std::endl;
-    // std::cout << " c: " << c<< std::endl;
+    in >> a >> b >> c;
+    out.println(a,b);
+    out.print(a,b);
+    out << a;
+    out << b;
+    // out(a);
+    // out(a,b,c).ln();
+    // in.read(a,b,c);
+    // out(a,b,c).ln();
+    std::cout << a << "\n";
     return 0;
 }

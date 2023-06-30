@@ -1,5 +1,6 @@
 //@desc 队列
 
+#pragma once
 #include "base.hpp"
 
 template<typename T,std::size_t N = maxn>

@@ -177,7 +177,8 @@ auto YankArray = YankAdaptor([]<typename T1,typename T2>(int count,T1 & lc,T2 & 
         for(int i=1;i<=count;++i)
             lc >> rc;
     }
-    else static_assert(false,"errors");
+    else assert(false);
+    // else static_assert(false,"errors");
 });
 
 auto Yank2DArray = YankAdaptor([]<typename T1, typename T2>(int n,int m,T1 & lc,T2 & rc){ 
