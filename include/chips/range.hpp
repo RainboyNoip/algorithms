@@ -21,9 +21,6 @@
  */
     
     
-    
-    
-    
 class Range {
 public:
     Range(int start, int end,int step) : start_(start), end_(end) ,step_(step){}
@@ -100,11 +97,4 @@ struct RangeFactory {
 constexpr RangeFactory<1> R;
 constexpr RangeFactory<0> R0;
 constexpr RangeFactory<1> R1;
-
-#ifndef FOR
-#define FOR(i, range) \
-    for (auto i : range)
-#else
-    static_assert(0,"Macro FOR already defined!");
-#endif
 

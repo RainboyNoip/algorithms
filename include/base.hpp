@@ -53,6 +53,7 @@
 #define maxe 2000007
 #endif
 
-#include "chips/fastIO.hpp"
-#include "utils/yank_adaptor.hpp"
+#include "base/macro.hpp"
+#include "base/fastIO.hpp"
+#include "base/yank_adaptor.hpp"
 

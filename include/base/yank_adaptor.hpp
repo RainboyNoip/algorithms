@@ -1,10 +1,3 @@
-
-#ifndef __HEADER_BASE_HPP__
-#include "base.hpp"
-#endif
-#include "chips/fastIO.hpp"
-
-
 /**
  * 灵感来自c++20 rangeAdatpor, 作用: 从左边抽取数据存入右边
  *
@@ -29,6 +22,8 @@
 //     }
 // }
 // fastIO >> read(5) >> container
+#pragma once
+#include "base.hpp"
 
 template<typename _leftContainer,typename _Callable,typename... _CallableArgs >
 struct YankActionAdaptor;
