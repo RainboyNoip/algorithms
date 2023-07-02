@@ -53,10 +53,9 @@ cppVersion = "c++17"
 if __cppversion[0] >= 11:
     cppVersion = "c++20"
 
-noicpputils_hpp_path = os.path.join( os.path.dirname(__file__),"../noicpputils.hpp")
+# noicpputils_hpp_path = os.path.join( os.path.dirname(__file__),"../noicpputils.hpp")
 
 compile_args = ["g++","-std="+cppVersion,"-DDEBUG","-DLOCAL",
-        "-include",noicpputils_hpp_path,
         "-g","-o","{output}","{file_name}"]
 
 verbose("编译参数为:\n")

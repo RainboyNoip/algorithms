@@ -32,6 +32,8 @@ content=""
 
 lines= sys.stdin.readlines()
 for l in lines:
+    if l.strip() == "":
+        continue
     ll = l.split()
     if len(ll)>=3:
         content += ("{}--{}[label=\"{}\"];\n".format(ll[0],ll[1],ll[2]))

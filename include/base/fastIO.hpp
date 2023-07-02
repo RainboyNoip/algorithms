@@ -67,7 +67,7 @@ struct fast_in :public fast_io_base  {
         char ch = getc();
 
         // no digit , 一真读,直数字
-        while('0' < ch && ch > '9') {
+        while(ch < '0' || '9' < ch ) {
             if( ch == '-') neg_flag = 1;
             ch = getc();
         }
@@ -137,7 +137,7 @@ struct fast_out : public fast_io_base {
 
     //递归边界
     template<typename T>
-        requires std::is_integral_v<T>
+        requires std::is_integral_v<std::remove_cvref_t<T>>
     void print_one(T n) {
         // std::remove_cvref_t<T> n = nn;
         int idx = 0;
@@ -154,44 +154,68 @@ struct fast_out : public fast_io_base {
     }
 
     template<typename T>
-    void print_sp(T n) {
-        print_one(n);
-        sp();
+        requires std::is_same_v<T,char>
+    void print_one(T n) {
+        putc(n);
+    }
+
+    //tuple的支持
+    template<char sep=' ',typename... T>
+    void print_one(const std::tuple<T...> & tup) {
+        [&]<std::size_t... I>(std::index_sequence<I...>){
+            print<sep>(std::get<I>(tup)...);
+        }(std::make_index_sequence<sizeof...(T)> {});
     }
 
     template<char sep = ' ',typename Iter>
-        requires std::is_pointer_v<Iter> || requires(Iter it) {
+        requires requires(Iter it) {
             {*it};   // it can be dereferenced.
             {++it};  // it can be incremented.
         }
     void print(Iter begin,Iter end) {
         for( auto i = begin ; i != end ;++i){
-            print_one(*i);
+            print_one<sep>(*i);
             putc(sep);
         }
     }
 
+
     //是一个range,也就是有begin,end
-    template<char sep = ' ',typename Range>
-        requires std::ranges::range<Range>
-    void print(Range& r) {
-        print<sep>(r.begin(),r.end());
+    template<typename Range>
+        requires requires (Range r) {
+            r.begin();
+            r.end();
+        }
+    void print(Range&& r) {
+        print<' '>(r.begin(),r.end());
+    }
+
+    template<typename Range>
+        requires requires (Range r) {
+            r.begin();
+            r.end();
+        }
+    void println(Range&& r) {
+        println(r.begin(),r.end());
     }
 
     template<char sep = ' ',typename Iter>
-        requires std::is_pointer_v<Iter> || requires(Iter it) {
+        requires requires(Iter it) {
             {*it};   // it can be dereferenced.
             {++it};  // it can be incremented.
         }
     void println(Iter begin,Iter end) {
-        print<sep>(begin,end);
-        ln();
+        for( auto i = begin ; i != end ;++i){
+            print_one<sep>(*i);
+            // putc(sep);
+            ln();
+        }
     }
 
     template<char sep = ' ',typename T,typename ...Args>
     void print(T&& n,Args&&... args) {
         print_one(std::forward<T>(n));
-        // if constexpr (sizeof...(args)!= 0)
+        if constexpr (sizeof...(args)!= 0)
             putc(sep);
         print<sep>(std::forward<Args>(args)...);
     }
@@ -229,6 +253,21 @@ fast_out & operator<<(fast_out & out,const int & a) {
     out.print(a);
     return out;
 }
+
+template<typename T>
+fast_out & operator<<(fast_out & out,T & a) {
+    out.print(a);
+    return out;
+}
+
+//tuple
+// template<typename... T>
+// fast_out & operator<<(fast_out & out,const std::tuple<T...> & tup) {
+//     [&tup,&out]<std::size_t... I>(std::index_sequence<I...>){
+//         out.println(std::get<I>(tup)...);
+//     }(std::make_index_sequence<sizeof...(T)> {});
+//     return out;
+// }
 
 fast_in in;
 fast_out out;

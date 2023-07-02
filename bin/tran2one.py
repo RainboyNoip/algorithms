@@ -44,6 +44,8 @@ if not ARGS["output"]:
 else:
     verbose("转化为: %s\n" % ARGS["output"])
 
+ignore_includes = ["utils.hpp"]
+
 # algorithm include 的目录
 algorithm_include_path = os.path.abspath(
     os.path.join(
@@ -74,6 +76,8 @@ def tran_file(fileName):
         matchObj = re.match('^#include\ ?"([\w/\.]+)"[\s\S]*$',line,re.I)
         if matchObj:
             include_file = matchObj.group(1)
+            if include_file in ignore_includes: # 忽略的头文件
+                continue
             real_file_path = os.path.join(algorithm_include_path,include_file)
             if os.path.exists(real_file_path) : # 存在这个文件
                 # print(real_file_path)

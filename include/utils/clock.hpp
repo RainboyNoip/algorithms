@@ -1,3 +1,10 @@
+/**
+ * 
+ * 计时器
+ * 使用方法:
+ *
+ *
+ */
 #pragma once
 #include <iostream>
 #include <iomanip>
@@ -5,8 +12,6 @@
 #include <string>
 #include <ctime>
 #include <thread>
-
-namespace RALGO {
 
 //定时器
 struct __Timer {
@@ -78,4 +83,3 @@ private:
     std::string msg; //输出的信息
 };
 
-} // end namespace RALGO 

@@ -28,7 +28,9 @@
 template<typename _leftContainer,typename _Callable,typename... _CallableArgs >
 struct YankActionAdaptor;
 
-//存 callback, callback args... 容器
+// 功能
+// 1. 存 callback, callback args... 容器
+// 2. 接收一个左边的容器,产生YankActionAdaptor
 template<typename _Callable,typename... _CallableArgs >
 struct YankDataContainer {
 
@@ -57,6 +59,9 @@ struct YankDataContainer {
     }
 };
 
+// 包含一个左容器
+// 一个 YankDataContainer
+// 只需要一个 >> 一个右容器就会执行
 template<typename _leftContainer,typename _Callable,typename... _CallableArgs >
 struct YankActionAdaptor {
     _leftContainer  _M_leftContainer;
@@ -90,6 +95,9 @@ YankActionAdaptor(_leftContainer&&,YankDataContainer<_Callable,_CallableArgs...>
     ->YankActionAdaptor<_leftContainer, _Callable, _CallableArgs...>;
 
 
+//两个功能
+//1. 先接受一个 lambda 构造参数,成功YankAdaptor对象
+//2. YankAdaptor对象,通过operator(args...) 接收lambda 的参数,生成YankDataContainer
 template<typename _Callable>
 struct YankAdaptor {
 
@@ -217,3 +225,55 @@ auto operator>>(fast_in & lc,T2&& _yankData)
 
 
 //二维数组的输出
+
+
+//默认的行为
+template<typename LC,typename RC>
+void default_yank_action(LC & lc ,RC & rc)
+{
+    lc >> rc;
+}
+
+
+// lc >> YankArray(5) >> rc; 只会默认的执行 5次
+// lc >> YankArray(5)([](int i,auto & lc ,auto &rc){
+//     lc >> rc.w; //
+//     Do other
+//
+// }) >> rc;
+struct __YankArray {
+    int cnt;
+
+    __YankArray(int n)
+        :cnt(n)
+    {}
+
+    //生成一个YankDataContainer
+    template<typename Lambda>
+    auto operator()(Lambda&& act) const {
+        return YankDataContainer(
+                [count=cnt,f=std::move(act)]
+                    (auto &lc,auto &rc)
+                {
+                    for(int i =1;i<=count;++i) {
+                        if constexpr ( std::is_invocable_v<decltype(f), int ,decltype(lc),decltype(rc)>)
+                            f(i,lc,rc);
+                        else
+                            f(lc,rc);
+                    }
+                }
+        );
+    }
+};
+
+
+//默认的行为
+template<typename LC>
+auto operator>>(LC & lc ,__YankArray & ya)
+{
+    auto _yankData = YankDataContainer([count=ya.cnt](auto & lc,auto & rc){
+                for(int i=1;i<=count;++i)
+                    default_yank_action(lc,rc);
+            });
+    return _yankData.accept_leftContainer(lc);
+}

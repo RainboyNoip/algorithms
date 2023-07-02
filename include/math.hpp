@@ -1,6 +1,6 @@
 //所有数学相关的算法
-#pragma 
-#include <algo/base.hpp>
+#pragma once
+#include "base.hpp"
 
 
 namespace __MY_SELF__NAMESPACE__ {
