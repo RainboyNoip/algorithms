@@ -10,7 +10,7 @@
  *   - 递归实现
  *   - 二进制实现
  *
- * GeospersHack 的使用
+ * GospersHack 的使用
  *  for(auto i : g ) {
  *      for( auto j : number_to_choose_arr(i) ){
  *          cout << j << " ";
@@ -43,8 +43,6 @@ struct full_combanation{
         n= n_;
         choose.clear();
         dfs_choose(1);
-        
-
     }
 };
 
@@ -159,7 +157,6 @@ struct  number_to_choose_arr {
     Iterator end() const {
         return {0};
     }
-
 };
 
 void combination_baseOn_next_permutation(int n ,int m)

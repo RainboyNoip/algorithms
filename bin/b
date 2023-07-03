@@ -10,12 +10,18 @@ parser = argparse.ArgumentParser(description="展示,对比")
 parser.add_argument("file_name",help="编译的代码文件名",nargs="?")
 parser.add_argument("-o","--output",help="编译输出的程序名")
 parser.add_argument("-i","--in",help="输入的文件名",default="in")
+parser.add_argument("-c","--clang",help="使用clang",action='store_true')
 parser.add_argument("-v","--verbose",help="显示详细信息",action='store_true')
 ARGS = vars(parser.parse_args())
 
 def verbose(*args,**kwargs):
     if ARGS["verbose"]:
         print(*args,**kwargs,end="",file=sys.stderr)
+
+compile_tool = "g++" # 编译工具
+
+if ARGS['clang']:
+    compile_tool = "clang++"
 
 #print(ARGS)
 # 没有指定文件名
@@ -47,15 +53,16 @@ if not ARGS["verbose"]:
         # cppVersion = std
         # break;
 
-__cppversion = os.popen("g++ --version | head -1").read().split()[-1].split(".")
-__cppversion = list(map(int,__cppversion))
-cppVersion = "c++17"
-if __cppversion[0] >= 11:
-    cppVersion = "c++20"
+cppVersion = "c++20"
+# __cppversion = os.popen("g++ --version | head -1").read().split()[-1].split(".")
+# __cppversion = list(map(int,__cppversion))
+# cppVersion = "c++17"
+# if __cppversion[0] >= 11:
+#     cppVersion = "c++20"
 
 # noicpputils_hpp_path = os.path.join( os.path.dirname(__file__),"../noicpputils.hpp")
 
-compile_args = ["g++","-std="+cppVersion,"-DDEBUG","-DLOCAL",
+compile_args = [compile_tool,"-std="+cppVersion,"-DDEBUG","-DLOCAL",
         "-g","-o","{output}","{file_name}"]
 
 verbose("编译参数为:\n")

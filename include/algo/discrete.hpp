@@ -13,12 +13,12 @@ struct discrete {
     int idx{0};
     int * last_unique_ptr = nullptr; //最后一个位置
 
-    void init() {
+    void clear() {
         idx = 0;
         last_unique_ptr = nullptr;
     }
 
-    void push(int v) {
+    void push(int v) { //增加元素
         a[++idx] = v;
     }
 
@@ -82,6 +82,4 @@ struct discrete {
 #endif
         return last_unique_ptr;
     }
-
-
 };

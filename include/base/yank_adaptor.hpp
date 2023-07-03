@@ -1,5 +1,16 @@
 /**
- * 灵感来自c++20 rangeAdatpor, 作用: 从左边抽取数据存入右边
+ * 灵感来自c++20 rangeAdatpor, 作用: 
+ *  
+ *  1. 从左边抽取数据存入右边
+ *      int a[10];
+ *      in >> YankArray(5) >> a; # 读取5个数,存入 a[1] ~ a[5]
+ *  2. 从左边抽取数据输出
+ *      a >> YankArray(5) >> out;
+ *      输出a[1]~a[5]
+ *  3. 通过修改默认的 in >> 或 out << 的operator 来实现对结构的写入,输出
+ *        具体看 example/base/yank_adaptor.cpp
+ *  4. 只要是两个容器之间的数组传递,都可以使用
+ *      
  *
  * 使用方法
  *
@@ -162,6 +173,8 @@ concept CanYankLikeArray = requires(lc & l,rc & r)
     {l >> r};
 };
 
+/*
+
 //向一维数组写
 auto YankArray = YankAdaptor([]<typename T1,typename T2>(int count,T1 & lc,T2 & rc){ 
     if constexpr ( OneDimensionalArray<T2>) {
@@ -203,6 +216,7 @@ auto Yank2DArray = YankAdaptor([]<typename T1, typename T2>(int n,int m,T1 & lc,
         }
     }
 });
+*/
 
 
 // 接收一个左边的容器,产生YankActionAdaptor
@@ -214,6 +228,7 @@ auto operator>>(fast_in & lc,T2&& _yankData)
 }
 
 
+
 //一维数组的输出
 
 // template<typename T2>
@@ -223,28 +238,43 @@ auto operator>>(fast_in & lc,T2&& _yankData)
 //     return YankActionAdaptor(lc,std::move(_yankData));
 // }
 
-
-//二维数组的输出
-
+//可以创建自己的default_yank_action 来实现不同的效果 
 
 //默认的行为
 template<typename LC,typename RC>
-void default_yank_action(LC & lc ,RC & rc)
+void default_yank_action(int i,LC & lc ,RC & rc)
 {
     lc >> rc;
 }
 
+template<typename LC,typename RC>
+requires OneDimensionalArray<RC>
+void default_yank_action(int i,LC & lc ,RC & rc)
+{
+    lc >> rc[i];
+}
 
+//lc是一个一维数组,而RC是fast_out
+template<typename LC,typename RC>
+requires OneDimensionalArray<LC> && std::is_same_v<RC, fast_out>
+void default_yank_action(int i,LC & lc ,RC & rc)
+{
+    rc << lc[i]; //输出这个元素
+}
+
+
+
+// YankArray 一维的读取数据
 // lc >> YankArray(5) >> rc; 只会默认的执行 5次
 // lc >> YankArray(5)([](int i,auto & lc ,auto &rc){
 //     lc >> rc.w; //
 //     Do other
 //
 // }) >> rc;
-struct __YankArray {
+struct YankArray {
     int cnt;
 
-    __YankArray(int n)
+    YankArray(int n) // 初始化循环次数
         :cnt(n)
     {}
 
@@ -256,10 +286,12 @@ struct __YankArray {
                     (auto &lc,auto &rc)
                 {
                     for(int i =1;i<=count;++i) {
-                        if constexpr ( std::is_invocable_v<decltype(f), int ,decltype(lc),decltype(rc)>)
-                            f(i,lc,rc);
-                        else
-                            f(lc,rc);
+                        if constexpr ( OneDimensionalArray<decltype(rc)>)
+                            f(lc,rc[i]);
+                        // if constexpr ( std::is_invocable_v<decltype(f), int ,decltype(lc),decltype(rc)>)
+                        //     f(i,lc,rc);
+                        // else
+                        //     f(lc,rc);
                     }
                 }
         );
@@ -267,13 +299,13 @@ struct __YankArray {
 };
 
 
-//默认的行为
+//不传递lambda的行为,默认的行为
 template<typename LC>
-auto operator>>(LC & lc ,__YankArray & ya)
+auto operator>>(LC & lc ,const YankArray & ya)
 {
     auto _yankData = YankDataContainer([count=ya.cnt](auto & lc,auto & rc){
                 for(int i=1;i<=count;++i)
-                    default_yank_action(lc,rc);
+                    default_yank_action(i,lc,rc);
             });
     return _yankData.accept_leftContainer(lc);
 }

@@ -37,11 +37,12 @@ do
     ./$data_generator > $base_dir/in 
     ./$usr_program < $base_dir/in > $base_dir/user_out 2> /dev/null
     ./$std_program < $base_dir/in > $base_dir/std_out 2> /dev/null
-    if ! /usr/bin/diff -q $compare_dir/user_out $compare_dir/std_out &> /dev/null; then
+    if ! /usr/bin/diff -q $base_dir/user_out $base_dir/std_out &> /dev/null; then
         # 如果diff出错
         echo  # 换行
         echo "diff出错，i的值为 $i"
         vimdiff $base_dir/user_out  $base_dir/std_out # 执行vimdiff进行比较
+        mv $base_dir/in $compare_dir
         rm $base_dir/user_out  $base_dir/std_out
         exit 1
     fi

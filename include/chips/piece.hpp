@@ -6,6 +6,7 @@ int predecessor(int  i,const int & m) {
     return i-m+1;
 }
 
+//这个太复杂了,直接换成简单的函数
 struct AdjacentNumberFinder {
     int m;
 
@@ -62,4 +63,7 @@ void upd_max(T1 & t,const T2& t2, const T3 &... t3) {
     upd_max(t,t3...);
 }
 
-
+template<typename T>
+inline bool is_in_range(T&& a,T && l, T&& r) {
+    return a >= l && a <= r;
+}

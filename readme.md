@@ -87,11 +87,20 @@ bin
 
 每个源文件都有使用方法的说明
 
+- [基础零件](./include/base)
+  - [fastIO 快速输入输出](./include/base/fastIO.hpp) `fastIO.hpp`
+  - [抽取器 `yank_adaptor.hpp`](./include/base/yank_adaptor.hpp) 从左容器抽取数据到右窗口
+  - [常用宏 `macro.hpp`](./include/base/marco.hpp)
+    - `af(i,n)`,`ff(i,n)`
 - [常用算法](./include/algo)
-  - [fastIO 快速输入输出](./include/algo/fastIO.hpp) `fastIO.hpp`
   - [二分查找](./include/algo/binary_search.hpp) `algorithms/binary_search.hpp`
   - [离散化 discrete](./include/algo/discrete.hpp)
   - [排列组合 combination](./include/algo/combination.hpp)
+    - 全组合,全排列,
+    - 组合(n个选m个),GospersHack算法
+    - 子集生成
+  - [倍增算法 double](./include/algo/double.hpp)
+    - `multi_doule<> crtp 子类`,rmq
 - [图](./include/graph)
   - [linkList.hpp 链式向量星,图的基本存储](./include/graph/linkList.hpp)
   - [edgeArray.hpp 边集数组](./include/graph/edgeArray.hpp)

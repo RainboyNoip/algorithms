@@ -167,15 +167,15 @@ struct fast_out : public fast_io_base {
         }(std::make_index_sequence<sizeof...(T)> {});
     }
 
-    template<char sep = ' ',typename Iter>
+    template<typename Iter>
         requires requires(Iter it) {
             {*it};   // it can be dereferenced.
             {++it};  // it can be incremented.
         }
     void print(Iter begin,Iter end) {
         for( auto i = begin ; i != end ;++i){
-            print_one<sep>(*i);
-            putc(sep);
+            print_one(*i);
+            putc(' ');
         }
     }
 
@@ -215,7 +215,7 @@ struct fast_out : public fast_io_base {
     template<char sep = ' ',typename T,typename ...Args>
     void print(T&& n,Args&&... args) {
         print_one(std::forward<T>(n));
-        if constexpr (sizeof...(args)!= 0)
+        // if constexpr (sizeof...(args)!= 0) //!!! 我们的print有一个特点,就是每输出一个数,后面都会加一个空格 
             putc(sep);
         print<sep>(std::forward<Args>(args)...);
     }

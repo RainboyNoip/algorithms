@@ -9,7 +9,7 @@
 *   t.add_row() //创建空行 
 *   t.push(t) //在最后一行添加一元素
 */
-
+#pragma once
 #include <string>
 #include <algorithm>
 #include <sstream>
