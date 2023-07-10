@@ -1,5 +1,11 @@
 /**
  * 离散化 discretization 
+ * 使用方式
+ *  - push(v) 添加元素
+ *  - clear() 清空
+ *  - init() 存完数据,进行离散
+ *  - query(int x) 得到原数字x 对应的离散化后的值
+ *
  * TODO 是否不使用stl的函数
  *  - unique
  *  - lower_bound
@@ -31,7 +37,7 @@ struct discrete {
     }
 
     //对存入的值进行离散化
-    void decrete() {
+    void init() {
         std::sort(a+1,a+1+idx);
         last_unique_ptr= std::unique(a+1,a+1+idx);
     }

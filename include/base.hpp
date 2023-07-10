@@ -45,13 +45,6 @@
 #include <concepts>
 #endif
 
-#ifndef maxn
-#define maxn 1000007
-#endif
-
-#ifndef maxe
-#define maxe 2000007
-#endif
 
 #include "base/macro.hpp"
 #include "base/fastIO.hpp"

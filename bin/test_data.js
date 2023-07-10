@@ -33,14 +33,17 @@ let data_list  = getDataList(data_path)['both_list']
 for( let item of data_list){
     let _in = pathFn.join(data_path,item[0])
     let _out = pathFn.join(data_path,item[1])
+    let msg = [_in,_out].join(' ')
+    console.time(msg)
     exec(`./${main} < ${_in} > ${result_out_path}`)
     try{
         let diff = exec(`diff --strip-trailing-cr ${result_out_path} ${_out}`)
-        log(_in,_out, "ok")
+        console.timeEnd(msg)
+        //log(_in,_out, "ok")
         //log(`diff <( sed -e '$a\\'  ${result_out_path} ) <( sed -e '$a\\'  ${_out} )`)
     }
     catch(e){
-        log(`${_in}`)
+        log(_in)
         log(e.output.toString('utf-8'))
         break;
     }

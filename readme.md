@@ -101,6 +101,11 @@ bin
     - 子集生成
   - [倍增算法 double](./include/algo/double.hpp)
     - `multi_doule<> crtp 子类`,rmq
+- [数据结构](./include/data_structure)
+  - [`sub_array` 差分数组](./include/data_structure/sub_array.hpp) 多次区间增减,一次查询单点 
+  - [bit 树状数组](./include/data_structure/bit.hpp) 
+     单点修改{区间和,区间最值},逆序对,
+     区间修改{单点值(动态查询差分数组),区间和}
 - [图](./include/graph)
   - [linkList.hpp 链式向量星,图的基本存储](./include/graph/linkList.hpp)
   - [edgeArray.hpp 边集数组](./include/graph/edgeArray.hpp)

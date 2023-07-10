@@ -11,6 +11,7 @@ parser.add_argument("file_name",help="编译的代码文件名",nargs="?")
 parser.add_argument("-o","--output",help="编译输出的程序名")
 parser.add_argument("-i","--in",help="输入的文件名",default="in")
 parser.add_argument("-c","--clang",help="使用clang",action='store_true')
+parser.add_argument("--not_in",help="不自动读取in",action='store_true')
 parser.add_argument("-v","--verbose",help="显示详细信息",action='store_true')
 ARGS = vars(parser.parse_args())
 
@@ -73,6 +74,8 @@ os.system(" ".join(compile_args).format(**ARGS))
 
 
 # 检查输入数据
+if ARGS["not_in"] :
+    sys.exit()
 
 if not os.path.exists(ARGS["in"]):
     print("没有找到数据文件 %s,直接执行\n" % ARGS["in"],file=sys.stderr)
