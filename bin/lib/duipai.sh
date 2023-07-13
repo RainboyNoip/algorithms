@@ -2,7 +2,7 @@
 total_count=200
 compare_dir="compare"
 data_code=data.cpp
-usr_code=2.cpp
+usr_code=1.cpp
 std_code=right.cpp
 
 usr_program="${usr_code%.*}.out"
