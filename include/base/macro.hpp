@@ -26,13 +26,36 @@
 #include <concepts>
 #endif
 
-#ifndef maxn
-#define maxn 1000007
+using std::literals::string_view_literals::operator""sv;
+
+#define __M_concat_II(a,b) a##b
+#define __M_concat_I(a,b) __M_concat_II(#a,b)
+#define __M_concat_sv(a) __M_concat_I(a,sv)
+
+
+constexpr int _sexp_to_number(std::string_view _sv){
+    int num = 0,e = 0,i=0;
+    while( i < _sv.length() && _sv[i] !='e')
+        num = num*10 + _sv[i] - '0',++i;
+    ++i;
+    while( i < _sv.length() )
+        e = e*10 + _sv[i]-'0',++i;
+    while(e--) num = num*10;
+    return num+5;
+}
+
+#ifdef __maxn__
+const int maxn = _sexp_to_number(__M_concat_sv(__maxn__));
+#elif not defined (maxn)
+const int maxn = 1000007;
 #endif
 
-#ifndef maxe
-#define maxe 2000007
+#ifdef __maxe__
+const int maxe = _sexp_to_number(__M_concat_sv(__maxe__));
+#elif not defined (maxe)
+const int maxe = 1000007;
 #endif
+
 
 #ifndef FOR
 #define FOR(i, range) \

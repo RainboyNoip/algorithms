@@ -1,5 +1,5 @@
 /*-----------------
-* author: Rainboy 🤠 /📬 : rainboylvx@qq.com ⌚: {time}
+* ✍️🤠: Rainboy  | 📧📬 : rainboylvx@qq.com | 💾⌚: {time}
 *----------------*/
 #define maxn 1000005
 #define maxe 2000005

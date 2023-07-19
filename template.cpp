@@ -1,7 +1,9 @@
 /*-----------------
-* author: Rainboy 🤠 /📬 : rainboylvx@qq.com ⌚: {time}
+* ✍️🤠: Rainboy  | 📧📬 : rainboylvx@qq.com | 💾⌚: {time}
 *----------------*/
 
+#define __maxn__ 2e5
+#define __maxe__ 4e5
 #include "base.hpp"
 #include "chips/piece.hpp"
 #include "math/fraction.hpp" // 分数类
