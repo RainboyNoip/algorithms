@@ -3,7 +3,7 @@
 // 使用方法
 // push(t) 不停的一个一个加入数据
 // range_add(l,r,add) 区间加
-// for(auto v : sub_array ){ } 遍历前缀和
+// TODO: for(auto v : sub_array ){ } 遍历前缀和
 //
 #pragma once
 #include "base/macro.hpp"

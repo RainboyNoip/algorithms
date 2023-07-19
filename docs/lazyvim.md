@@ -31,6 +31,9 @@ q:如何地位sqnr
 
 不支持reg匹配,所以不好用,我还是使用原来的`ultisnips`
 
+如果需要在`nvim-cmp`下使用`ultisnips`,那就需要[cmp-nvim-ultisnips](https://github.com/quangnguyen30192/cmp-nvim-ultisnips),
+它是`UltiSnips completion source for nvim-cmp`
+
 
 
 

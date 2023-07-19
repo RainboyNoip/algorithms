@@ -24,7 +24,10 @@
  *
  *
  */
+
 #pragma once
+#ifndef  __FAST_OUT_
+#define  __FAST_OUT_
 #include "base.hpp"
 
 constexpr int io_buff_size = 1<<21;
@@ -271,3 +274,4 @@ fast_out & operator<<(fast_out & out,T & a) {
 
 fast_in in;
 fast_out out;
+#endif

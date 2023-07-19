@@ -21,32 +21,10 @@
 
 #pragma once
 
+#ifndef __HEADER_BASE_HPP__
 #define __HEADER_BASE_HPP__
-
-#include <cassert>
-#include <cstring>
-#include <iostream>
-#include <map>
-#include <vector>
-#include <array>
-#include <deque>
-#include <queue>
-#include <stack>
-#include <algorithm>
-#include <iomanip>
-#include <tuple>
-#include <string_view>
-#include <functional>
-#include <memory_resource>
-#include <ranges>
-
-
-#ifdef __cpp_concepts
-#include <concepts>
-#endif
-
 
 #include "base/macro.hpp"
 #include "base/fastIO.hpp"
 #include "base/yank_adaptor.hpp"
-
+#endif

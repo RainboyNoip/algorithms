@@ -2,6 +2,29 @@
 #pragma once
 
 #include <cstddef> // for std::size_t
+#include <cassert>
+#include <cstring>
+#include <iostream>
+#include <map>
+#include <vector>
+#include <array>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <algorithm>
+#include <iomanip>
+#include <tuple>
+#include <string_view>
+#include <functional>
+#include <memory_resource>
+
+#ifdef __cpp_lib_ranges
+#include <ranges>
+#endif
+
+#ifdef __cpp_concepts
+#include <concepts>
+#endif
 
 #ifndef maxn
 #define maxn 1000007

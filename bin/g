@@ -9,18 +9,29 @@ selected_input_file=in
 
 if [ -n "$1" ] && { [ "$1" = "c" ] || [ "$1" = "choose" ]; }; then
     selected_program=$(find . -maxdepth 1 -type f -name "*.out" | fzf \
-        --height=~20% --layout=reverse --border=top \
+        --height=~20% --tac --layout=reverse --border=top \
         --border-label="choose program" --border-label-pos=4 \
-        --selected-1 --ansi
+        --select-1 --ansi
     )
     # echo $selected_file
+    #
+    if [ -z "$selected_program" ];then
+        exit 0
+    fi
 
     selected_input_file=$(find . -maxdepth 1 -type f -name "*in*" | fzf \
-        --height=~20% --border=top \
+        --height=~20% --tac --layout=reverse --border=top \
         --border-label="choose input" --border-label-pos=4 \
-        --selected-1 --ansi
+        --select-1 --ansi
     )
+
+    if [ -z "$selected_input_file" ];then
+        exit 0
+    fi
+
 fi
+
+
 
 
 # echo $selected_program

@@ -36,6 +36,7 @@
 
 #pragma once
 
+#include <cassert>
 #include "base.hpp"
 
 
@@ -54,6 +55,20 @@ struct edge_no_w {
 };
 
 
+template<typename T>
+struct is_edge : public std::false_type{};
+
+template<>
+struct is_edge<edge> : public std::true_type{};
+
+
+template<typename T>
+struct is_edge_no_w : public std::false_type{};
+
+template<>
+struct is_edge_no_w<edge_no_w> : public std::true_type{};
+
+
 fast_out & operator<<(fast_out & out ,const edge & e) {
     out.println(e.v,e.w);
     return out;
@@ -65,23 +80,14 @@ fast_out & operator<<(fast_out & out ,const edge_no_w & e) {
 }
 
 
-template<typename T>
-requires std::is_same_v<T, edge> || std::is_same_v<T, edge_no_w>
-void make_edge(T & e,int v,int w,int next) {
-    if constexpr ( std::is_same_v<T, edge> )
-        e.v = v,e.w = w,e.next = next;
-    else if constexpr ( std::is_same_v<T, edge_no_w> )
-        e.v = v,e.next = next;
+void make_edge(edge & e,int v,int w,int next) {
+    e.v = v,e.w = w,e.next = next;
 }
 
-template<typename T>
-requires std::is_same_v<T, edge> || std::is_same_v<T, edge_no_w>
-auto make_edge(int v,int w,int next) -> T {
-    if constexpr ( std::is_same_v<T, edge> )
-        return {v,w,next};
-    else if constexpr ( std::is_same_v<T, edge_no_w> )
-        return {v,next};
+void make_edge(edge_no_w & e,int v,int w,int next) {
+    e.v = v,e.next = next;
 }
+
 
 //图的类型
 
@@ -99,8 +105,8 @@ private:
 
     using type = GraphType;
     
-    Edge e[V_CNT];
-    int h[E_CNT],edge_cnt=0;
+    Edge e[E_CNT];
+    int h[V_CNT],edge_cnt=0;
 
 public:
     
@@ -123,14 +129,19 @@ public:
 
     inline void add(int u,int v,int w=0){
         emplace_back(u,v,w);
+        if constexpr (std::is_same<GraphType, undirect_graph>::value)
+            emplace_back(v,u,w);
     }
 
+    //最后一条边的编号
+    int last_edge_idx() const {return edge_cnt-1;}
     int get_edge_cnt() const { return edge_cnt;}
 
-    void add2(int u,int v,int w=0){
-        add(u,v,w);
-        add(v,u,w);
-    }
+    // TODO 有向图
+    // void add2(int u,int v,int w=0){
+    //     add(u,v,w);
+    //     add(v,u,w);
+    // }
 
     //返回以u为起点的第一条边的编号
     int head(int u) const{ return h[u]; }
@@ -209,15 +220,16 @@ struct linklist_traits<linkList<GraphType,Edge,V_CNT,E_CNT>> {
 template<typename GraphType,typename Edge,std::size_t V_CNT, std::size_t E_CNT>
 void operator>>(fast_in & in,linkList<GraphType,Edge, V_CNT, E_CNT> & e) {
     int u,v,w=0;
-    if constexpr ( std::is_same_v<Edge, edge>) //有向图
+    if constexpr (is_edge<Edge>::value) //有向图
+    {
         in.read(u,v,w);
-    else if constexpr (std::is_same_v<Edge,edge_no_w>)
-        in.read(u,v);
-
-    if constexpr ( std::is_same_v<GraphType, direct_graph>) //有向图
         e.add(u,v,w);
-    else if constexpr ( std::is_same_v<GraphType, undirect_graph>)//无向图
-        e.add2(u,v,w);
+    }
+    else if constexpr (is_edge_no_w<Edge>::value)
+    {
+        in.read(u,v);
+        e.add(u,v);
+    }
 }
 
 //无向图,有边权
