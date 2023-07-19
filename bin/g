@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-# 快速调试的程序
+# 快速调试程序的脚本
+# 需要的程序 cgdb fzf find
+# g 默认使用cgdb 调试 1.out < in
+# g c 选择输入的程序与 in 文件
 
 selected_program=1.out
 selected_input_file=in
@@ -8,14 +11,14 @@ if [ -n "$1" ] && { [ "$1" = "c" ] || [ "$1" = "choose" ]; }; then
     selected_program=$(find . -maxdepth 1 -type f -name "*.out" | fzf \
         --height=~20% --layout=reverse --border=top \
         --border-label="choose program" --border-label-pos=4 \
-        --ansi
+        --selected-1 --ansi
     )
     # echo $selected_file
 
     selected_input_file=$(find . -maxdepth 1 -type f -name "*in*" | fzf \
-        --height=~20% --layout=reverse --border=top \
+        --height=~20% --border=top \
         --border-label="choose input" --border-label-pos=4 \
-        --ansi
+        --selected-1 --ansi
     )
 fi
 
@@ -23,5 +26,4 @@ fi
 # echo $selected_program
 # echo $selected_input_file
 cgdb $selected_program -- --ex "start <${selected_input_file}"
-
 

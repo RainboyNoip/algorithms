@@ -54,16 +54,21 @@ if not ARGS["verbose"]:
         # cppVersion = std
         # break;
 
-cppVersion = "c++20"
-# __cppversion = os.popen("g++ --version | head -1").read().split()[-1].split(".")
-# __cppversion = list(map(int,__cppversion))
-# cppVersion = "c++17"
-# if __cppversion[0] >= 11:
-#     cppVersion = "c++20"
+# cppVersion = "c++20"
+__cppversion = os.popen("g++ --version | head -1").read().split()[-1].split(".")
+print( os.popen("g++ --version | head -1").read().split())
+__cppversion = list(map(int,__cppversion))
+print(__cppversion)
+cppVersion = "c++17"
+if __cppversion[0] >= 20230429:
+    cppVersion = "c++20"
 
 # noicpputils_hpp_path = os.path.join( os.path.dirname(__file__),"../noicpputils.hpp")
 
+include_path =os.path.abspath( os.path.join(os.path.dirname(__file__),'../include') )
+
 compile_args = [compile_tool,"-std="+cppVersion,"-DDEBUG","-DLOCAL",
+                "-I",include_path,
         "-g","-o","{output}","{file_name}"]
 
 verbose("编译参数为:\n")
