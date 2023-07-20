@@ -55,13 +55,17 @@ if not ARGS["verbose"]:
         # break;
 
 # cppVersion = "c++20"
-__cppversion = os.popen("g++ --version | head -1").read().split()[-1].split(".")
-print( os.popen("g++ --version | head -1").read().split())
-__cppversion = list(map(int,__cppversion))
-print(__cppversion)
+__cppversion = os.popen("g++ --version | head -1").read().split() #split(".")
+__cppversion = next( (x for x in __cppversion if "." in x),"9.0.0")
+# print(__cppversion)
+# __cppversion = list(map(int,__cppversion))
+main_version = int(__cppversion.split(".")[0])
+# print(main_version)
 cppVersion = "c++17"
-if __cppversion[0] >= 20230429:
+if main_version >= 11:
     cppVersion = "c++20"
+
+# print(cppVersion)
 
 # noicpputils_hpp_path = os.path.join( os.path.dirname(__file__),"../noicpputils.hpp")
 
