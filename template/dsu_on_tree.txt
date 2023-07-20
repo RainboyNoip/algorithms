@@ -1,0 +1,66 @@
+//>>>>>>>>>>>>>>>>>>>>>> dsu_on_tree
+#include "graph/heavy_light_decomposition.hpp" //对树进行轻重儿子划分的库
+
+//求解轻重儿子
+//heavy_light_decomposition hls;
+//hls.init(u,)
+
+namespace  dsu_on_tree {
+auto & e = grah; //TODO 
+int flag_hson;
+int start_u;
+
+//统计节点u下面的统计信息
+void calc_info(int u,int parent) {
+
+    for(auto &v : e.edges_start_for(u))
+    {
+        if( v == parent || v == flag_hson ) continue;
+        calc_info(v,u);
+    }
+}
+
+//删除节点u下面的统计信息
+void del_info(int u,int parent) {
+
+    for(auto &v : e.edges_start_for(u))
+    {
+        if( v == parent || v == flag_hson ) continue;
+        del_info(v,u);
+    }
+
+}
+
+void dfs(int u,int parent,bool keep)
+{
+    //1. 遍历轻儿子
+    for(int i = e.head(u) ; ~i ;i = e.next(i)) {
+        int v = e[i].v;
+        if( v == parent || v==hls.hson(u) ) continue;
+        dfs(v,u,false);
+    }
+    //2. 遍历轻儿子
+    if( hls.hson(u) ) { //hson 存在
+        dfs(hls.hson(u),u,true);
+        flag_hson = hls.hson(u);
+    }
+    // 3. 暴力统计u,和u的轻儿子子树的贡献
+    start_u = u;
+    calc_info(u,parent);
+    flag_hson = 0; //删除儿子标记
+    start_u = 0;
+
+    //统计信息
+    ans[u] = max_color_sum;
+
+    if( !keep) {
+        // 从u回溯,删除子树上的所有点的贡献
+        //! 会把记录信息的数组清零
+        del_info(u,parent);
+        // 清空 必须放这里,想一想,只有重儿子的情况
+        // max_color_sum = max_color_cnt = 0;
+    }
+}
+
+} // end namespace dsu_on_tree
+//<<<<<<<<<<<<<<<<<<<<<< dsu_on_tree
