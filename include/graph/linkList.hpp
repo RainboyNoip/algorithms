@@ -146,6 +146,8 @@ public:
     //返回以u为起点的第一条边的编号
     int head(int u) const{ return h[u]; }
 
+    int next(int idx) const { return e[idx].next; }
+
     //返回第i条边的编号
     Edge& operator[](int i){ return e[i]; }
 

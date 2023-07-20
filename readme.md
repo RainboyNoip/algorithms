@@ -109,8 +109,12 @@ bin
 - [图](./include/graph)
   - [linkList.hpp 链式向量星,图的基本存储](./include/graph/linkList.hpp)
   - [edgeArray.hpp 边集数组](./include/graph/edgeArray.hpp)
-  - [bipartile_graph_color.hpp 二分图染色,无奇环判定](./include/graph/bipartile_graph_color.hpp)
-  - [tarjan_scc.hpp 强连通分量](./include/graph/tarjan_scc.hpp)
+  - [`bipartile_graph_color` 二分图染色,无奇环判定](./include/graph/bipartile_graph_color.hpp)
+  - [`tarjan_scc` 强连通分量](./include/graph/tarjan_scc.hpp)
+  - [`heavy_light_decomposition` 树轻重划分](./include/graph/heavy_light_decomposition.hpp)
+  - [`lca_craw` 爬树(倍增)法求lca](./include/graph/lca_craw.hpp)
+  - [`lca_craw` 爬树(倍增)法求lca](./include/graph/lca_craw.hpp)
+  - [`dsu_on_tree` 树上启发发式合并 模板](./template/dsu_on_tree.txt)
 - [工具](./include/utils)
   - [输出调试](./include/utils/log.hpp) `utils/log.hpp`
   - [输出调试](./include/utils/debug.hpp) `utils/debug.hpp`

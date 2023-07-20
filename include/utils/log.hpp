@@ -8,6 +8,7 @@
  * 原理见 https://cpphub.roj.ac.cn/ 奇技淫巧/宏调试输出技巧
  */
 
+#pragma once
 #include "base.hpp"
 
 //颜色 TODO
