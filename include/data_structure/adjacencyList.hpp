@@ -3,7 +3,8 @@
 #pragma once
 #include "base/macro.hpp"
 
-template<typename T,std::size_t V_CNT = maxn,std::size_t TOT = maxe>
+// HEAD_CNT 表头的数量,ARR_CNT 单数组的长度,也是总物的数量
+template<typename T,std::size_t HEAD_CNT = maxn,std::size_t ARR_CNT = maxe>
 struct adjacencyList {
 private:
     inline void __next(int head) {
@@ -13,9 +14,9 @@ private:
     }
 public:
         
-    int h[V_CNT]; //表头
-    T mem[TOT];   // 内存池
-    int nxt[TOT]; // next数组,nxt[i] ,给同表头的下一下数据
+    int h[HEAD_CNT]; //表头
+    T mem[ARR_CNT];   // 内存池
+    int nxt[ARR_CNT]; // next数组,nxt[i] ,给同表头的下一下数据
     int cnt;      // 内存池计数
 
     adjacencyList() {
@@ -35,6 +36,12 @@ public:
 
     inline void push(int head,const T & val) {
         mem[cnt] = val;
+        __next(head);
+    }
+    
+    template<typename... Args>
+    void emplace_back(int head,Args&& ... args) {
+        mem[cnt] = {std::forward<Args>(args)...};
         __next(head);
     }
 
@@ -90,4 +97,12 @@ public:
         return mems(this,u);
     }
 
+
+
+    //遍历点u 周围点
+    template<typename U>
+    void for_each(int u,U&& func){
+        for(int i = head(u) ; i !=-1;i = next(i))
+            func(u,i,mem[i]); //mem中的下标,u点,mem元素中元素
+    }
 };
