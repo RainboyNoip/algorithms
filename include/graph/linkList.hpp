@@ -1,11 +1,3 @@
-/*---
-{
-"info":"链式前向星,存图",
-"word":"linkList",
-"expand":"linkList<MaxN> e;",
-"user_data":"ralgo"
-}
----*/
 // https://zh.wikipedia.org/wiki/%E9%93%BE%E5%BC%8F%E5%89%8D%E5%90%91%E6%98%9F
 //[链式前向星及其简单应用 | Malash's Blog](https://malash.me/200910/linked-forward-star/)
 /**
@@ -13,21 +5,20 @@
  * 具体使用见 examples/linkList.cpp
  * 使用:
  *   1. 定义
- * linkList e1;         //定义一个默认有 10^6个点,10^6个边的 存储结构
- * linkList<100> e2;    //定义一个有 100个点,10^6个边的 存储结构
- * linkList<100,100> e3;//定义一个有 100个点,100 个边的 存储结构
+ *   - graph gh; 无向有边权
+ *   - graph_nw gh; 无有无边权
+ *   - digraph gh;  无向有边权
+ *   - digraph_nw gh;   有向无边权
  *
  *   2. 添加边
- * e.add(u,v)
- * e.add(u,v,w)
- * e.add2(u,v)
- * e.add2(u,v,w)
+ *      gh.add(u,v) 无边权添加边
+ *      gh.add(u,v,w) 有边权添加边
  *
  *   3. 遍历以u为起点边的所有边
- * for(int i = e.head(u);~i;i = e[i].next){
+ * for(int i = e.head(u);~i;i = e.next(i)){
  *    int v = e[i].v, w = e[i].w;
  * }
- * for( auto &[v,w] : e.edges_start_for(u) ) {
+ * for( auto &[v,w] : e.start_from_head(u) ) {
  *    
  * }
  *   
@@ -36,9 +27,8 @@
 
 #pragma once
 
-#include "base.hpp"
+#include "base/macro.hpp"
 #include "data_structure/adjacencyList.hpp" // 基于adjacencyList
-
 
 //存一条边
 struct edge {
@@ -47,37 +37,30 @@ struct edge {
     operator int() { return v; }
 };
 
+namespace std {
+    template <> struct tuple_size<edge> : std::integral_constant<size_t, 2> { };
+    template <> struct tuple_element<0,edge> { using type = int; };
+    template <> struct tuple_element<1,edge> { using type = int; };
+
+    //解引用 auto [v,w] = e;
+    template <std::size_t I>
+    auto get(edge const& x) { static_assert(I<=1,"I must <= 1");}
+
+    template <>
+    auto get<0>(edge const& x) { return x.v; }
+
+    template <>
+    auto get<1>(edge const& x) { return x.w; }
+}
+
 //没有边权的边
 using edge_no_w = int;
 
 template<typename T>
-struct is_edge : public std::false_type{};
-
-template<>
-struct is_edge<edge> : public std::true_type{};
-
+struct is_edge : public std::is_same<T,edge> {};
 
 template<typename T>
-struct is_edge_no_w : public std::false_type{};
-
-template<>
-struct is_edge_no_w<edge_no_w> : public std::true_type{};
-
-
-fast_out & operator<<(fast_out & out ,const edge & e) {
-    out.println(e.v,e.w);
-    return out;
-}
-
-/*
-void make_edge(edge & e,int v,int w,int next) {
-    e.v = v,e.w = w,e.next = next;
-}
-
-void make_edge(edge_no_w & e,int v,int w,int next) {
-    e.v = v,e.next = next;
-}
-*/
+struct is_edge_no_w : public std::is_same<T, edge_no_w>{};
 
 
 //图的类型
@@ -115,7 +98,6 @@ struct linkList :public adjacencyList<Edge,V_CNT,E_CNT>
     //返回第i条边的编号
     Edge& operator[](int i){ return ADJ::mem[i]; }
 
-
     //注: 只能用于无边权
     void add(int u,int v) {
         if constexpr ( not is_edge_no_w<Edge>::value)
@@ -133,39 +115,9 @@ struct linkList :public adjacencyList<Edge,V_CNT,E_CNT>
         if constexpr ( is_undirect)
             ADJ::emplace_back(v,u,w);
     }
-
 };
 
 
-//无向图,有边权
-using graph = linkList<undirect_graph,edge,maxn,maxe>;
-
-//无向图,无边权
-using graph_nw = linkList<undirect_graph,edge_no_w,maxn,maxe>;
-
-//有向图,有边权
-using dirgraph = linkList<direct_graph,edge,maxn,maxe>;
-
-//有向图,无边权
-using dirgraph_nw = linkList<direct_graph,edge_no_w,maxn,maxe>;
-
-//如何 使 struct binding 支持自己的类型
-//https://stackoverflow.com/a/45898931
-namespace std {
-    template <> struct tuple_size<edge> : std::integral_constant<size_t, 2> { };
-    template <> struct tuple_element<0,edge> { using type = int; };
-    template <> struct tuple_element<1,edge> { using type = int; };
-
-    //解引用 auto [v,w] = e;
-    template <std::size_t I>
-    auto get(edge const& x) { static_assert(I<=1,"I must <= 1");}
-
-    template <>
-    auto get<0>(edge const& x) { return x.v; }
-
-    template <>
-    auto get<1>(edge const& x) { return x.w; }
-}
 
 // fast_io 读取数据
 #ifdef  __FAST_OUT_
@@ -183,4 +135,25 @@ void operator>>(fast_in & in,linkList<Type,Edge, V_CNT, E_CNT> & e) {
         e.add(u,v);
     }
 }
+
+fast_out & operator<<(fast_out & out ,const edge & e) {
+    out.println(e.v,e.w);
+    return out;
+}
 #endif
+
+
+//无向图,有边权
+using graph = linkList<undirect_graph,edge,maxn,maxe>;
+
+//树
+using Tree  = graph;
+
+//无向图,无边权
+using graph_nw = linkList<undirect_graph,edge_no_w,maxn,maxe>;
+
+//有向图,有边权
+using dirgraph = linkList<direct_graph,edge,maxn,maxe>;
+
+//有向图,无边权
+using dirgraph_nw = linkList<direct_graph,edge_no_w,maxn,maxe>;
