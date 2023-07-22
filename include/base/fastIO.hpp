@@ -139,28 +139,32 @@ struct fast_out : public fast_io_base {
     inline void println() {}
 
     //递归边界
-    template<typename T>
-        requires std::is_integral_v<std::remove_cvref_t<T>>
+    template<typename T,std::enable_if_t< std::is_integral_v<std::remove_cvref_t<T>> ,int> = 0 >
     void print_one(T n) {
-        // std::remove_cvref_t<T> n = nn;
-        int idx = 0;
-        if( n < 0)
-            putc('-'),n = -n;
+        if constexpr( std::is_same_v<T,char>) { //是一个字符类型
+            putc(n);
+        }
+        else {
+            // std::remove_cvref_t<T> n = nn;
+            int idx = 0;
+            if( n < 0)
+                putc('-'),n = -n;
 
-        do {
-            num[++idx]  = n % 10 + '0';
-        }while(n /= 10);
+            do {
+                num[++idx]  = n % 10 + '0';
+            }while(n /= 10);
 
-        do {
-            putc(num[idx]);
-        }while(--idx);
+            do {
+                putc(num[idx]);
+            }while(--idx);
+        }
     }
 
-    template<typename T>
-        requires std::is_same_v<T,char>
-    void print_one(T n) {
-        putc(n);
-    }
+    // //递归边界, char 字符
+    // template<typename T ,std::enable_if_t<std::is_same_v<T,char>,int> = 0 >
+    // void print_one(T c) {
+    //     putc(c);
+    // }
 
     //tuple的支持
     template<char sep=' ',typename... T>
@@ -168,6 +172,23 @@ struct fast_out : public fast_io_base {
         [&]<std::size_t... I>(std::index_sequence<I...>){
             print<sep>(std::get<I>(tup)...);
         }(std::make_index_sequence<sizeof...(T)> {});
+    }
+
+
+    //输出字符串
+    template<std::size_t N>
+    void print(const char (&str)[N]){
+        for(int i = 0;i<N && str[i]!='\0'; ++i )
+        {
+            print_one(str[i]);
+        }
+    }
+
+    //输出字符串
+    template<std::size_t N>
+    void println(const char (&str)[N]){
+        print(str);
+        ln();
     }
 
     template<typename Iter>
@@ -202,6 +223,7 @@ struct fast_out : public fast_io_base {
         println(r.begin(),r.end());
     }
 
+
     template<char sep = ' ',typename Iter>
         requires requires(Iter it) {
             {*it};   // it can be dereferenced.
@@ -209,10 +231,10 @@ struct fast_out : public fast_io_base {
         }
     void println(Iter begin,Iter end) {
         for( auto i = begin ; i != end ;++i){
-            print_one<sep>(*i);
-            // putc(sep);
-            ln();
+            print_one(*i);
+            putc(sep);
         }
+        ln();
     }
 
     template<char sep = ' ',typename T,typename ...Args>
