@@ -102,6 +102,7 @@ bin
   - [倍增算法 double](./include/algo/double.hpp)
     - `multi_doule<> crtp 子类`,rmq
 - [数据结构](./include/data_structure)
+  - [`bit.hpp`](./include/data_structure/bit.hpp) 二进制集合操作
   - [`sub_array` 差分数组](./include/data_structure/sub_array.hpp) 多次区间增减,一次查询单点 
   - [bit 树状数组](./include/data_structure/bit.hpp) 
      单点修改{区间和,区间最值},逆序对,
