@@ -44,3 +44,4 @@ catch_amalgamated.cpp
 catch_amalgamated.hpp
 
 build/
+.ccls
