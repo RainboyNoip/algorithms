@@ -1,12 +1,6 @@
 //二进制操作
 #include "base/macro.hpp"
 
-// #include <limits>
-// #include <type_traits>
-// #if __has_include(<version>)
-// #include <version>
-// #endif
-//
 #include <climits>
 // require c++20
 // https://en.cppreference.com/w/cpp/header/bit
@@ -14,126 +8,9 @@
 #include <bit>
 #endif
 
-// #include "math/bit/__lg.hpp"
 
-namespace  __bit_opt_details {
-
-//基础的bit操作
-//a的第pos位设为1
-template<typename T = int>
-T set_at_pos(T a , T pos){
-    return a | (1 <<pos);
-}
-
-//a的第pos位设为0
-template<typename T = int>
-inline T clear_at_pos(T a , T pos){
-    return a & ~(1 <<pos);
-}
-
-//a的第pos位取反
-template<typename T = int>
-inline T toggle_at_pos(T a , T pos){
-    return a ^ (1 <<pos);
-}
-
-//保留后k位,其它
-template<typename T = int>
-T keepLast(T a , T k){
-    return a & ((1<<k)-1);
-}
-
-//第k位的值
-template<typename T = int>
-T bit_at_pos(T a , T k){
-    return (a>>k) & 1;
-}
-
-
-//清除最后一个1
-//11,000 & 10,111 = 10,000
-template<typename T = int>
-T clear_last(T a){
-    return a & (a-1);
-}
-
-
-//最低位1 后面有多少个0
-template<typename T = int>
-T count_bit_trail_zero_buildin(T a){
-    if constexpr (std::is_same_v<int, T> || std::is_same_v<T,unsigned int>)
-        return __builin_ctz(a);
-    else
-        return __builin_ctzll(a);
-}
-
-//最低位1 后面有多少个0
-template<typename T = int>
-T count_bit_trail_zero(T a){
-    int count = 0;
-    for( ; (a & 1) == 0; a>>=1 )
-        count++;
-    return count;
-}
-
-
-//一共有多少个1
-template<typename T = int>
-T count_bit_build(T a){
-    if constexpr (std::is_same_v<int, T> || std::is_same_v<T,unsigned int>)
-        return __builin_popcount(a);
-    else
-        return __builin_popcountll(a);
-}
-
-//一共有多少个1
-template<typename T = int>
-T count_bit(T a){
-    int count = 0;
-    for( ; a; a = clear_last(a) )
-        count++;
-    return count;
-}
-
-
-// 保留最低位的1,其它置0
-// 111000 -> 001000
-template<typename T>
-inline T lowbit(T x) {
-    return x & (-x);
-}
-
-
-
-// 代码来自 https://www.zhihu.com/question/35361094/answer/1648810477
-// 求最高位
-template <typename T> int high_bit(T x)
-{
-#ifdef __cpp_lib_bitops
-    using UT = std::make_unsigned_t<T>;
-    return std::numeric_limits<UT>::digits - std::countl_zero(UT(x)) - 1;
-#else
-    auto ux = std::make_unsigned_t<T>(x);
-    int lb = -1, rb = std::numeric_limits<decltype(ux)>::digits;
-    while (lb + 1 < rb)
-    {
-        int mid = (lb + rb) / 2;
-        if (ux >> mid)
-        {
-            lb = mid;
-        }
-        else
-        {
-            rb = mid;
-        }
-    }
-    return lb;
-#endif
-}
-
-} // namespace __bit_opt_details
-
-//子集生成算法
+//子集生成算法,模板
+/*
 template<typename F>
 void generateSubsets(int u ,F&& f) {
     for (int s = u; s; s = (s - 1) & u)
@@ -141,7 +18,7 @@ void generateSubsets(int u ,F&& f) {
         f(s);
     }
 }
-
+*/
 
 //子集生成算法
 template<typename T= unsigned int>
@@ -262,32 +139,42 @@ struct Bit {
     // 是否全是0
     bool none()  const{ return num_ == 0;}
 
-    //求最高的1
+    //求最高的1的位置,like std::__lg
+    int lg() const {
+#ifdef __cpp_lib_bitops
+    using UT = std::make_unsigned_t<T>;
+    return std::numeric_limits<UT>::digits - std::countl_zero(UT(num_)) - 1;
+#elif __has_builtin( __builtin_clz)
+        // explain: code from here : https://stackoverflow.com/a/40436485
+        auto pos = sizeof(T) * CHAR_BIT  -__builtin_clz(num_) -1;
+        return pos;
+#else
+
+        // 代码来自 https://www.zhihu.com/question/35361094/answer/1648810477
+        auto ux = std::make_unsigned_t<T>(num_);
+        int l = std::numeric_limits<decltype(ux)>::digits-1;
+        int r = 0;
+        //使用二分查找来查询
+        while( l > r) {
+            int mid = (l+r) >> 1;
+            if( (ux >> mid) == 0)
+                l = mid-1;
+            else
+                r = mid;
+        }
+        return l;
+#endif
+    }
+
+    //求最接近 <=num_,又是2的指数的那个数
     T floor() const {
     //TODO check num_ not eq 0
 #ifdef __cpp_lib_int_pow2
     if constexpr (std::unsigned_integral<T>)
         return std::bit_floor(num_);
-#elif __has_builtin( __builtin_clz)
-    // explain: code from here : https://stackoverflow.com/a/40436485
-    auto pos = sizeof(T) * CHAR_BIT -1 -__builtin_clz(num_);
-    return 1 << pos;
 #else
-
-    auto ux = std::make_unsigned_t<T>(num_);
-    int l = std::numeric_limits<decltype(ux)>::digits-1;
-    int r = 0;
-    //使用二分查找来查询
-    while( l > r) {
-        int mid = (l+r) >> 1;
-        if( (ux >> mid) == 0)
-            l = mid-1;
-        else
-            r = mid;
-    }
-    return 1<<l;
+    return 1 << lg();
 #endif
-
     }
 
     auto sub_sets() const // 子集生成
