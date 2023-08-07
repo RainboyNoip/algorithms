@@ -1,4 +1,11 @@
 //生成随机树
+/*
+ * 使用方法
+ * __random::tree mytree(10); //生成10个点的随机树
+ * for(auto [fa,child] : mytree) {
+ *      //遍历所有父子边
+ * }
+ * */
 
 #pragma once
 #include "utils/random/random.hpp"

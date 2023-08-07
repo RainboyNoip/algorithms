@@ -12,6 +12,7 @@
 #include <string>
 #include <ctime>
 #include <thread>
+#include <sstream>
 
 //定时器
 struct __Timer {
@@ -50,11 +51,9 @@ struct Clock {
     }
 
     void tick() {
+        const char __color[] = "\033[32m\033[44m"; //green
+        const char __color_rst[] = "\033[0m"; //green
         using namespace std::chrono;
-        std::istream::fmtflags old_flags = m_os.setf( std::istream::fixed,
-                std::istream::floatfield ); //保留原始的设置
-        std::streamsize old_prec = m_os.precision( 6 ); // ?
-
         //得到运行时间
         auto Duration = timer.elapsed();
 
@@ -63,17 +62,38 @@ struct Clock {
         //输出 秒
         auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(Duration);
         auto micro = duration_cast<microseconds>(Duration);
-        m_os << msg << ' '
+#ifndef  __FAST_OUT_
+        std::istream::fmtflags old_flags = m_os.setf( std::istream::fixed,
+                std::istream::floatfield ); //保留原始的设置
+        std::streamsize old_prec = m_os.precision( 6 ); // ?
+
+        m_os << "\n\n"
+            << __color 
+            <<
+            msg << ' '
             << ms << " aka: "
-            << micro << '\n';
-            
+            << micro
+            << __color_rst
+            << '\n';
             
         // m_os << timer.elapsed() << " s\n"
         //     << std::endl;
-
         //恢复原来
         m_os.flags( old_flags );
         m_os.precision( old_prec );
+#else
+        std::stringstream ss;
+        ss 
+            << __color 
+            <<
+            msg << ' '
+            << ms << " aka: "
+            << micro
+            << __color_rst;
+        out.ln();
+        out.ln();
+        out.println(ss.str());
+#endif
 
     }
 

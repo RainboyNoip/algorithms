@@ -9,7 +9,9 @@
  */
 
 #pragma once
-#include "base.hpp"
+// #include "base/marco.hpp"
+
+#include <string_view>
 
 //颜色 TODO
 
