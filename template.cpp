@@ -1,9 +1,9 @@
 /*-----------------
 * ✍️🤠: Rainboy  | 📧📬 : rainboylvx@qq.com | 💾⌚: {time}
+* if you want to compile this code , please visit 👉 https://github.com/RainboyNoip/algorithms
 *----------------*/
-
-#define __maxn__ 2e5
-#define __maxe__ 4e5
+#define __maxn__ 1e6
+#define __maxe__ 2e6
 #include "base.hpp"
 #include "chips/piece.hpp"
 #include "math/fraction.hpp" // 分数类
