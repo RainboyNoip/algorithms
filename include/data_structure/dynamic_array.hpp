@@ -8,6 +8,9 @@
 // 使用下标操作  myarr[i],最小下标1
 // 元素个数  myarr.size();
 // 范围指针 begin() end()
+// map 迭代
+// myarr.map( [](int & v){ v += 100;})
+// myarr.map( [](int idx,int & v){ if( idx % 2 ==0 ) v += 100 ;})
 #pragma once
 #include "base/macro.hpp"
 
@@ -27,18 +30,27 @@ struct dynamic_array {
         a[++idx] = v;
     }
 
+    template<typename... U>
+    inline void emplace_back(U&&... args){
+        a[++idx] = {std::forward<U>(args)...};
+    }
+
+    bool empty() const {
+        return size() == 0;
+    }
+
     inline
     T & back() {
         return a[idx];
     }
 
-    inline
-    T & top() {
-        return back();
-    }
+    // inline
+    // T & top() {
+    //     return back();
+    // }
 
     inline
-    void pop() {
+    void pop_back() {
         --idx;
     }
 
@@ -59,14 +71,43 @@ struct dynamic_array {
         return &a[idx+1];
     }
 
-
     T & operator[](std::size_t id) {
         return a[id];
     }
+
+    // wow ! like haskell Functor
+    template<typename F>
+    dynamic_array & map(F&& f) {
+        for(int i = 1;i <= idx ;i++) {
+
+            if constexpr (std::is_invocable_v<F,T> || std::is_invocable_v<F,T&>){
+                f(a[i]);
+            }
+            else if constexpr(std::is_invocable_v<F,int,T>,std::is_invocable_v<F,int,T&>) {
+                f(i,a[i]);
+            }
+#ifdef DEBUG
+            else {
+                throw std::invalid_argument("in dynamic_array map,map(Function),Function not invocable!");
+            }
+#endif
+        }
+        return *this;
+    }
+
 };
 
 
 #ifdef  __FAST_OUT_
+template<typename T>
+fast_out & operator>>(fast_in & in,dynamic_array<T> & da) {
+    // out.println(da.begin(), da.end());
+    auto end = da.end();
+    in >> *end;
+    ++da.idx;
+    return out;
+}
+
 template<typename T>
 fast_out & operator<<(fast_out & out ,dynamic_array<T> & da) {
     out.println(da.begin(), da.end());

@@ -1,6 +1,6 @@
 /*-----------------
-* ✍️🤠: Rainboy  | 📧📬 : rainboylvx@qq.com | 💾⌚: {time}
-* if you want to compile this code , please visit 👉 https://github.com/RainboyNoip/algorithms
+* author: Rainboy  | Mail: rainboylvx@qq.com | Write_time: {time}
+* if you want to compile this code , please visit : https://github.com/RainboyNoip/algorithms
 *----------------*/
 #define __maxn__ 1e6
 #define __maxe__ 2e6

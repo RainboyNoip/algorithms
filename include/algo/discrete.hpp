@@ -11,7 +11,7 @@
  *  - lower_bound
  *
  */
-#include "base.hpp"
+#include "base/macro.hpp"
 
 template<std::size_t N = maxn>
 struct discrete {

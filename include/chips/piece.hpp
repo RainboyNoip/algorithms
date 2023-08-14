@@ -1,3 +1,15 @@
+// 提供一些碎片化的函数/代码
+/*
+-- upd_min(a,b) if a > b, a =b;
+-- upd_max(a,b) if a < b, a=b;
+-- is_in_range(a,l,r) if a in [l,r]
+
+-- max_val(begin,end)
+-- max_pos(begin,end)
+
+
+*/
+#pragma once
 #include "base.hpp"
 //计算一个数i 前面的第m个数是多少
 //包括i本身
@@ -66,4 +78,21 @@ void upd_max(T1 & t,const T2& t2, const T3 &... t3) {
 template<typename T>
 inline bool is_in_range(T&& a,T && l, T&& r) {
     return a >= l && a <= r;
+}
+
+template<typename Iter,
+    typename = std::void_t<decltype(*std::declval<Iter>(),++std::declval<Iter&>())> >
+inline auto max_pos(Iter l,Iter r) {
+    Iter pos = l;
+    for( ; l != r; ++ l) {
+        if( *pos < *l) pos = l;
+    }
+    return pos;
+}
+
+
+template<typename Iter,
+    typename = std::void_t<decltype(*std::declval<Iter>(),++std::declval<Iter&>())> >
+inline auto max_val(Iter l,Iter r) {
+    return *max_pos(l,r);
 }

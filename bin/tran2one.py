@@ -141,6 +141,39 @@ while True:
         write_flag = "y"
         break
 
+
+
+
+
+
+
+# 声明头
+copyright = '''/*
+ *   rainboyNoip/algorithms, some helpful cpp utils for noi/acm user
+ *    Copyright (C) 2020-2021  Rainboy
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+'''
+
+
+
+
+
+
+out_str = copyright + out_str
+
 if write_flag.lower() in ['y','']:
     # 写入文件的代码
     with open(out_filename, "w") as file:
@@ -148,6 +181,7 @@ if write_flag.lower() in ['y','']:
     print(f"写入文件: {out_filename}")
 else:
     print("不写入文件")
+    
 
 if ARGS["copy"]:
     subprocess.run(['xsel', '-i','-b'], input=out_str, encoding='utf-8')

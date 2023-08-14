@@ -13,13 +13,13 @@ if [ -n "$1" ] && { [ "$1" = "c" ] || [ "$1" = "choose" ]; }; then
         --border-label="choose program" --border-label-pos=4 \
         --select-1 --ansi
     )
-    # echo $selected_file
-    #
+    # echo $selected_program
+
     if [ -z "$selected_program" ];then
         exit 0
     fi
 
-    selected_input_file=$(find . -maxdepth 1 -type f -name "*in*" | fzf \
+    selected_input_file=$(find . -maxdepth 2 -type f -name "*in*" | fzf \
         --height=~20% --tac --layout=reverse --border=top \
         --border-label="choose input" --border-label-pos=4 \
         --select-1 --ansi
@@ -28,13 +28,20 @@ if [ -n "$1" ] && { [ "$1" = "c" ] || [ "$1" = "choose" ]; }; then
     if [ -z "$selected_input_file" ];then
         exit 0
     fi
+fi
 
+if [ ! -f "$selected_program" ]; then
+    echo "$selected_program 程序不存在"
 fi
 
 
-
+if [ ! -f "$selected_input_file" ]; then
+    echo "$selected_input_file 输入文件不存在"
+    cgdb $selected_program -- --ex "start"
+else
+    cgdb $selected_program -- --ex "start <${selected_input_file}"
+fi
 
 # echo $selected_program
 # echo $selected_input_file
-cgdb $selected_program -- --ex "start <${selected_input_file}"
 

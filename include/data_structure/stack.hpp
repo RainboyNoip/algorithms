@@ -4,8 +4,34 @@
 #include "data_structure/dynamic_array.hpp"
 
 template<typename T=int,std::size_t N=maxn>
-using stack = dynamic_array<T, N>;
+struct stack : public dynamic_array<T, N>
+{
+    using DA = dynamic_array<T, N>;
 
+    using DA::push;
+    using DA::empty;
+    using DA::size;
+
+    // template<typename... U>
+    // using emplace = typename DA::emplace_back<U...>;
+
+    // template<typename... U>
+    using DA::emplace_back;
+
+    inline T & top() {
+        return DA::back();
+    }
+
+    template<typename... U>
+    inline void emplace(U&&... args){
+        emplace_back(std::forward<U>(args)...);
+    }
+
+    inline void pop() {
+        DA::pop_back();
+    }
+
+};
 
 
 // 单调栈,TODO

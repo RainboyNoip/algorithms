@@ -1,13 +1,26 @@
-//@desc 队列
+//--- 实现了队列与优先队列的数据结构
+// 使用方法:
+// struct node { };
+// queue<node,1000> myque; 
+// myque.push({1,2})
+// myque.emplace_back(1,2)
+// myque.size() 元素数量
+// myque.empty()
+// myque.front()
+// myque.back()
+// myque.pop_back()
+// myque.pop_front()
 
 #pragma once
-#include "base.hpp"
+#include "base/macro.hpp"
 
 template<typename T,std::size_t N = maxn>
 struct queue {
     T a[N]; //数据
     unsigned int head{0};
     unsigned int tail{0};
+
+    void clear() { head = tail = 0;}
 
     queue():head{0},tail{0} { }
 
@@ -21,6 +34,11 @@ struct queue {
     inline
     void push(T && v) {
         a[tail++] = std::move(v);
+    }
+
+    template<typename... Args>
+    inline void emplace_back(Args&&... args) {
+        a[tail++] = {std::forward<Args>(args)...};
     }
 
     inline void pop_front() { ++head;}

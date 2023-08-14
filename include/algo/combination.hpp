@@ -1,6 +1,7 @@
-#include "base.hpp"
+#include "base/macro.hpp"
 /**
  * 
+ 
  * 排列 std::next_pemutation
  * 组合
  *  - 所有的可能的组合 选1个,选2个,选3个 ..... 选n个
@@ -36,7 +37,7 @@ struct full_combanation{
         dfs_choose(x+1); //不选
         choose.push_back(x);
         dfs_choose(x+1);//选
-        choose.pop_back(x);
+        choose.pop_back();
     }
 
     void work(int n_){
@@ -48,7 +49,7 @@ struct full_combanation{
 
 //dfs 实现从n个里选m个
 
-void dfs_n_choose_m(int x)
+void dfs_n_choose_m(int x,int m)
 {
     if( choose.size() > m ) {
 

@@ -97,8 +97,6 @@ public:
         return mems(this,u);
     }
 
-
-
     //遍历点u 周围点
     template<typename U>
     void for_each(int u,U&& func){

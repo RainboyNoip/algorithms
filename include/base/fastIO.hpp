@@ -58,12 +58,16 @@ struct fast_in :public fast_io_base  {
     //递归边界
     void read() {}
 
-    template<typename T,typename ...Args>
-#ifdef __cpp_concepts
-    requires 
-    std::conjunction_v<std::is_integral<T>,std::is_integral<Args>...>
-    // std::integral<T> && std::integral<args>...
-#endif
+    template<typename T,typename ...Args,
+    std::enable_if_t<
+        std::conjunction_v<std::is_integral<T>,std::is_integral<Args>...>
+    ,int> = 0
+    >
+// #ifdef __cpp_concepts
+//     requires 
+//     std::conjunction_v<std::is_integral<T>,std::is_integral<Args>...>
+//     // std::integral<T> && std::integral<args>...
+// #endif
     void read(T & n,Args&... args) {
         n = 0;
         bool neg_flag = 0;
@@ -160,6 +164,11 @@ struct fast_out : public fast_io_base {
         }
     }
 
+    void print_one(const std::string & str) {
+        for(char c: str)
+            print_one(c);
+    }
+
     // //递归边界, char 字符
     // template<typename T ,std::enable_if_t<std::is_same_v<T,char>,int> = 0 >
     // void print_one(T c) {
@@ -191,7 +200,7 @@ struct fast_out : public fast_io_base {
         ln();
     }
 
-    template<typename Iter>
+    template<char sep = ' ',typename Iter>
         requires requires(Iter it) {
             {*it};   // it can be dereferenced.
             {++it};  // it can be incremented.
@@ -199,29 +208,29 @@ struct fast_out : public fast_io_base {
     void print(Iter begin,Iter end) {
         for( auto i = begin ; i != end ;++i){
             print_one(*i);
-            putc(' ');
+            putc(sep);
         }
     }
 
 
-    //是一个range,也就是有begin,end
-    template<typename Range>
-        requires requires (Range r) {
-            r.begin();
-            r.end();
-        }
-    void print(Range&& r) {
-        print<' '>(r.begin(),r.end());
-    }
+    // //是一个range,也就是有begin,end
+    // template<typename Range>
+    //     requires requires (Range r) {
+    //         r.begin();
+    //         r.end();
+    //     }
+    // void print(Range&& r) {
+    //     print<' '>(r.begin(),r.end());
+    // }
 
-    template<typename Range>
-        requires requires (Range r) {
-            r.begin();
-            r.end();
-        }
-    void println(Range&& r) {
-        println(r.begin(),r.end());
-    }
+    // template<typename Range>
+    //     requires requires (Range r) {
+    //         r.begin();
+    //         r.end();
+    //     }
+    // void println(Range&& r) {
+    //     println(r.begin(),r.end());
+    // }
 
 
     template<char sep = ' ',typename Iter>
@@ -237,7 +246,9 @@ struct fast_out : public fast_io_base {
         ln();
     }
 
-    template<char sep = ' ',typename T,typename ...Args>
+    template<char sep = ' ',typename T,typename ...Args
+        // ,typename = std::void_t<decltype(print_one(std::declval<T>()))>
+    >
     void print(T&& n,Args&&... args) {
         print_one(std::forward<T>(n));
         // if constexpr (sizeof...(args)!= 0) //!!! 我们的print有一个特点,就是每输出一个数,后面都会加一个空格 

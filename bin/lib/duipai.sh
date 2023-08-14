@@ -14,7 +14,7 @@ newer_than_compile() {
     local out=$2
     if [[ $code -nt $out ]]; then
         echo "$code newer than $out Compile ..."
-        b $code -o $out --not_in
+        b --no_debug $code -o $out --not_in
         if [ $? -ne 0 ]; then
             exit 1
         fi

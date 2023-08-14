@@ -17,10 +17,6 @@
  *
  *
  *
- *
- *
- *
- *
  *          2^0 2^1     2^2
  *
  *      -1---2---3---4---5---
@@ -34,9 +30,9 @@
  *
  *
  */
-#include "base.hpp"
+#include "base/macro.hpp"
 
-//需要计算2^x <= n的x
+//预处理,得到一个数组,a[n]的值为x:2^x <= n的最大的x
 template<int N>
 struct fake_log2 {
     int a[N]; // a[i] 表示 2^x <= i 的最大x
@@ -66,24 +62,35 @@ inline int pre_pos(int i,int j) {
     return i - (1<<j);
 }
 
-template<template <std::size_t> typename T, int N>
-constexpr std::size_t extract(const T<N>&) { return N; }
+//提取 模板类 child<size_t N> 中的N
+template<template <std::size_t> class T, int N>
+constexpr std::size_t extract_N(const T<N>&) { return N; }
 
 //CRTP,Curiously Recurring Template Pattern
-template<template<std::size_t> class _Child,std::size_t N = maxn>
+// drive
+template<template<std::size_t> class _Drive,std::size_t N = maxn>
 struct multi_double {
-    using Child = _Child<N>;
-    friend Child;
+    using Drive = _Drive<N>; //孩子的数量
+    friend Drive;
 
-    fake_log2<N> * log2 = nullptr;
+    fake_log2<N> * log2 = nullptr; // 预处理的数组指针
     static constexpr int max_log = floor_log(N);
 
     int f[N][max_log+1];
 
-    //得到点f[i][j]的信息
-    //合并点i的2^j的信息为
+    /* 调用Drive类 的 merge_impl,合并 f[i][j] 的左右两半,得到f[i][j]
+    * 
+    *  
+    *                     i+i^2^(j-1) +2^(j-1)
+    *          ┌───────────────────────────┐
+    *          │   i+2^(j-1)-1             │
+    *    ┌─────┼──────────────────────┐    │
+    *    │     │                      │    │
+    *────┴─────┴──────────────────────┴────┴───────────
+    * 
+    */
     inline int get(int i,int j) {
-        return static_cast<Child*>(this)->merge_impl(f[i][j-1],f[i+(1<<(j-1))][j-1]);
+        return static_cast<Drive*>(this)->merge_impl(f[i][j-1],f[i+(1<<(j-1))][j-1]);
     }
 
     inline void __init() {
@@ -96,19 +103,23 @@ struct multi_double {
     }
     
     //初始化信息
+    // 子类需要实现 get0(i) 也就是f[i][0]
     void init(){
         //init0,初始化f[i][0]的信息
-        // static_cast<Child*>(this)->init0();
+        // static_cast<Drive*>(this)->init0();
         for(int i =0;i<N;i++) // < N ,因为N后面没有元素了
-            f[i][0] = static_cast<Child*>(this)->get0(i);
+            f[i][0] = static_cast<Drive*>(this)->get0(i);
         __init();
     }
 
     //从i点开始跳跃,得到停下来的点
+    // TODO 这个跳跃不好,应该从小跳
+    // TODO 这个jump 什么样的情境需要
+    // 子类需要实现 limit_jump(i,k) i能不能到达k这个位置
     int jump(int i) {
         for(int j = max_log;j>=0;j--)
         {
-            if( !static_cast<Child*>(this)->limit_jump(i,i+2^j) )
+            if( !static_cast<Drive*>(this)->limit_jump(i,i+2^j) )
                 i += 2^j;
         }
         return i;
@@ -116,7 +127,7 @@ struct multi_double {
 };
 
 /*
-//模板
+//模板 --> 一个区间最大值的模板
 template<std::size_t N = maxn>
 struct xxx : public multi_double<xxx, N>{
     
@@ -161,6 +172,7 @@ struct rmq : public multi_double<rmq,N>{
 
     int * a = nullptr; //原数组
 
+    //设定原数组
     template<std::size_t sz>
     void set_orgin_array(int (&arr)[sz] )
     {
@@ -175,10 +187,12 @@ struct rmq : public multi_double<rmq,N>{
         return a[i+1];
     }
 
+    //a,b两个区间的信息,如何合并的
     int merge_impl(int a,int b){
         return a> b? a : b;
     }
 
+    //查询
     int query(int l,int r) const {
         int j = floor_log(r-l+1);
         return std::max(f[l-1][j],f[pre_pos(r,j)][j]);

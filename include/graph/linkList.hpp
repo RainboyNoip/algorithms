@@ -101,10 +101,10 @@ struct linkList :public adjacencyList<Edge,V_CNT,E_CNT>
     //注: 只能用于无边权
     void add(int u,int v) {
         if constexpr ( not is_edge_no_w<Edge>::value)
-            throw std::invalid_argument("add(u,v) must apply to edge without weight !");
-        ADJ::push(u,v);
+            throw std::invalid_argument("add(u,v) must apply to edge without weight !your graph Type is with edge weight!");
+        ADJ::emplace_back(u,v);
         if constexpr ( is_undirect)
-            ADJ::push(v,u);
+            ADJ::emplace_back(v,u);
     }
 
     //注: 只能用于有边权
