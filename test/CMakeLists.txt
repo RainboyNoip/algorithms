@@ -17,6 +17,7 @@ add_library(catch2 "${Catch2_path}/catch_amalgamated.cpp") # 这里有什么错�
 
 file(GLOB test_sources RELATIVE ${PROJECT_SOURCE_DIR} "test_*.cpp")
 include(./functional/CMakeLists.txt)
+include(./Streams/CMakeLists.txt)
 
 foreach(_source_cpp ${test_sources})
 message(${_source_cpp})
