@@ -92,6 +92,13 @@ bin
   - [抽取器 `yank_adaptor.hpp`](./include/base/yank_adaptor.hpp) 从左容器抽取数据到右窗口
   - [常用宏 `macro.hpp`](./include/base/marco.hpp)
     - `af(i,n)`,`ff(i,n)`
+- [碎片代码 `chips`](./include/chips/)
+  - [`inf.hpp' 正负inf](./include/chips/inf.hpp)
+  - [`multi_cout.hpp' 一次输出多个数据](./include/chips/)
+  - [`range.hpp' 类似python的range,给for使用](./include/chips/range.hpp)
+  - [`relative_pos.hpp' 相对位置](./include/chips/relative_pos.hpp)
+  - [`ring2chain.hpp' 拆环成链](./include/chips/ring2chain.hpp)
+  - [`upd_max.hpp' 更新最大值](./include/chips/upd_max.hpp)
 - [常用算法](./include/algo)
   - [二分查找](./include/algo/binary_search.hpp) `algorithms/binary_search.hpp`
   - [离散化 discrete](./include/algo/discrete.hpp)
@@ -103,7 +110,9 @@ bin
     - `multi_doule<> crtp 子类`,rmq
 - [数据结构](./include/data_structure)
   - [`bit.hpp`](./include/data_structure/bit.hpp) 二进制集合操作
+  - [`pre_sum` 前缀和](./include/data_structure/pre_sum.hpp)
   - [`sub_array` 差分数组](./include/data_structure/sub_array.hpp) 多次区间增减,一次查询单点 
+  - [`binary_heap` 堆](./include/data_structure/binary_heap.hpp) 动态排序,`log(n)`
   - [bit 树状数组](./include/data_structure/bit.hpp) 
      单点修改{区间和,区间最值},逆序对,
      区间修改{单点值(动态查询差分数组),区间和}

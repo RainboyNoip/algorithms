@@ -6,49 +6,8 @@
 
 -- max_val(begin,end)
 -- max_pos(begin,end)
-
-
 */
 #pragma once
-#include "base.hpp"
-//计算一个数i 前面的第m个数是多少
-//包括i本身
-inline
-int predecessor(int  i,const int & m) {
-    return i-m+1;
-}
-
-//这个太复杂了,直接换成简单的函数
-struct AdjacentNumberFinder {
-    int m;
-
-    AdjacentNumberFinder(int o)
-        :m(o)
-    {}
-
-    //i前面第m个数是哪个
-    inline
-    int forward(int i) const{
-        return i-m;
-    }
-
-    //i后面第m个数是哪个
-    inline
-    int backword(int i) const{
-        return i+m;
-    }
-
-    friend
-    int operator < (int i,const AdjacentNumberFinder & adj) {
-        return adj.forward(i);
-    }
-
-    friend
-    int operator > (int i,const AdjacentNumberFinder & adj) {
-        return adj.backword(i);
-    }
-};
-
 
 template<typename... T>
 auto maximum(T&&... args) {
@@ -80,6 +39,8 @@ inline bool is_in_range(T&& a,T && l, T&& r) {
     return a >= l && a <= r;
 }
 
+
+// [iter l ,Iter r] ,之间的最大的位置
 template<typename Iter,
     typename = std::void_t<decltype(*std::declval<Iter>(),++std::declval<Iter&>())> >
 inline auto max_pos(Iter l,Iter r) {
@@ -91,6 +52,7 @@ inline auto max_pos(Iter l,Iter r) {
 }
 
 
+// [iter l ,Iter r] ,之间的最大的值
 template<typename Iter,
     typename = std::void_t<decltype(*std::declval<Iter>(),++std::declval<Iter&>())> >
 inline auto max_val(Iter l,Iter r) {

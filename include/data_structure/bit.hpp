@@ -20,7 +20,10 @@ void generateSubsets(int u ,F&& f) {
 }
 */
 
-//子集生成算法
+//子集生成算法, 求一个集合的所有子集(二进制表示)
+//核心(now-1) & org
+// 使用 bit_sub_sets a(10)
+// for( auto v : a) 
 template<typename T= unsigned int>
 struct bit_sub_sets {
     T num;
@@ -59,7 +62,7 @@ struct Bit {
 
     // 转换成 T 类型
     operator T() const { return num_; }
-    T to_num_() const { return T(*this);}
+    T to_num() const { return T(*this);}
 
     // 1. 位置i置1
     Bit & set(int i) { num_ |= (1<<i);  return *this; }

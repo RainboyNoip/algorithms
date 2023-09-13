@@ -53,58 +53,6 @@ long long operator ""_Number(const char * str,std::size_t N){
 }
 
 
-//得到数值的最值
-struct __INF {
-    template<typename T>
-    constexpr operator T() const {
-        return std::numeric_limits<T>::max();
-    }
-
-    template<typename T>
-    constexpr bool operator==(const T oth) const
-    {
-        return T(*this) == oth;
-    }
-
-};
-
-struct __NINF {
-    template<typename T>
-    constexpr operator T() const {
-        return std::numeric_limits<T>::lowest();
-    }
-
-    template<typename T>
-    constexpr bool operator==(const T oth) const
-    {
-        return T(*this) == oth;
-    }
-};
-
-constexpr auto NINF = __NINF();
-constexpr auto INF  = __INF();
-
-//得到数值的相对最值 0x3f
-struct __inf {
-    constexpr operator unsigned long long() const { return 0x3f3f3f3f3f3f3f3f; }
-    constexpr operator long long() const  { return 0x3f3f3f3f3f3f3f3f; }
-    constexpr operator unsigned int() const { return 0x3f3f3f3f; }
-    constexpr operator int() const { return 0x3f3f3f3f; }
-    constexpr operator char() const { return 0x3f; }
-    constexpr operator unsigned char() const { return 0x3f; }
-
-    template<typename T>
-    constexpr bool operator==(const T oth) const
-    {
-        return T(*this) == oth;
-    }
-};
-
-constexpr auto inf = __inf();
-
-
-
-
 #ifdef __maxn__
 const int maxn = add_five(_sexp_to_number(__M_concat_sv(__maxn__)));
 #elif not defined (maxn)
