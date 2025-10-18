@@ -37,9 +37,9 @@ fi
 
 if [ ! -f "$selected_input_file" ]; then
     echo "$selected_input_file 输入文件不存在"
-    cgdb $selected_program -- --ex "start"
+    cgdb $selected_program -- -q --ex "start"
 else
-    cgdb $selected_program -- --ex "start <${selected_input_file}"
+    cgdb $selected_program -- -q --ex "start <${selected_input_file}"
 fi
 
 # echo $selected_program

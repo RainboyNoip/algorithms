@@ -65,7 +65,12 @@ void dfs_n_choose_m(int x,int m)
 
 
 //从n里选m个所有可以的二进制表示
-
+// 原理 0b00111 -> 0b001011
+// 核心原理
+//    0b000010111 -> 11011 -> 11101
+// -> 0b000000001
+// -> 0b000011000 -> sum
+// -> 0b000001111 -> Xor
 struct GeospersHack {
     int n_;
     int m_;
@@ -76,9 +81,13 @@ struct GeospersHack {
     {}
 
     static int next_combination(int m) {
-        int lb = m & -m; //保留最低位置的1
+        int lb = m & -m; //保留最低位置的1 lowbit
         int sum = m + lb; //使最低连续的1进位
         int Xor = sum ^ m; //只保留最低连续1和进位的1
+        // 为什么+2?
+        // 假如 m 后面有连续的n个1
+        // 那么 Xor 就有连续的n+1个1
+        // 最n+1个1只要保留n-1,且放在最后面,所以-2
         return (Xor >> (__builtin_ctz(lb) +2) ) | sum;
     }
 

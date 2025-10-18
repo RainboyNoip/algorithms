@@ -8,6 +8,7 @@
 -- max_pos(begin,end)
 */
 #pragma once
+#include "base/macro.hpp"
 
 template<typename... T>
 auto maximum(T&&... args) {

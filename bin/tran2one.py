@@ -13,9 +13,18 @@ import re
 import sys
 import subprocess
 from subprocess import Popen, PIPE
+from datetime import datetime
+
+
 # p = Popen(['xsel','-pi'], stdin=PIPE)
 # p.communicate(input='Hello, World')
 
+author="Rainboy"
+email="rainboylvx@qq.com"
+# 获取当前时间
+current_time = datetime.now()
+# 将时间转换为字符串
+time_string = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
 parser = argparse.ArgumentParser(description="转换代码")
 parser.add_argument("file_name",help="转换的代码文件名",nargs="?")
@@ -170,14 +179,30 @@ copyright = '''/*
 
 
 
+template_head='''
+/*-----------------
+* author: {} | Mail: {} | Write_time: {}
+* if you want to compile this code , please visit : https://github.com/RainboyNoip/algorithms
+*----------------*/
+'''.format(author,email,time_string)
+
+optimize='''
+#pragma GCC optimize(2)
+'''
 
 
-out_str = copyright + out_str
+final_out_str = copyright 
+final_out_str += template_head
+final_out_str += optimize
+final_out_str += out_str
+
+
+# 添加编译优化
 
 if write_flag.lower() in ['y','']:
     # 写入文件的代码
     with open(out_filename, "w") as file:
-        file.write(out_str)
+        file.write(final_out_str)
     print(f"写入文件: {out_filename}")
 else:
     print("不写入文件")

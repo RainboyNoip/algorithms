@@ -51,7 +51,8 @@ struct Clock {
     }
 
     void tick() {
-        const char __color[] = "\033[32m\033[44m"; //green
+        const char __color[] = "\033[30m\033[42m"; //green
+        // const char __color[] = "\033[31m"; //green
         const char __color_rst[] = "\033[0m"; //green
         using namespace std::chrono;
         //得到运行时间
@@ -68,9 +69,8 @@ struct Clock {
         std::streamsize old_prec = m_os.precision( 6 ); // ?
 
         m_os << "\n\n"
-            << __color 
-            <<
-            msg << ' '
+            << __color
+            << msg << ' '
             << ms << " aka: "
             << micro
             << __color_rst
@@ -84,9 +84,8 @@ struct Clock {
 #else
         std::stringstream ss;
         ss 
-            << __color 
-            <<
-            msg << ' '
+            << __color
+            << msg << ' '
             << ms << " aka: "
             << micro
             << __color_rst;

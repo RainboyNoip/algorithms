@@ -8,6 +8,7 @@
  * */
 
 #pragma once
+#include "base/fastIO.hpp"
 #include "utils/random/random.hpp"
 
 namespace __random {
@@ -40,8 +41,9 @@ struct tree {
         int idx; // now index of array a
         int * a; // pointer of array that record relation between father and child
 
-        std::tuple<int,int> operator*() const {
-            return std::make_tuple(a[idx],idx);
+        // {idx位置的值,和idx位置的编号}
+        std::pair<int,int> operator*() const {
+            return std::make_pair(a[idx],idx);
         }
 
         bool operator==(const Iterator & it) const {
@@ -73,4 +75,14 @@ struct tree_w {
     
 };
 
+
 } // end namespace __random
+
+
+template<>
+void fast_out::println<__random::tree>(__random::tree & tr) {
+    for( auto [u,v] : tr) {
+        println(u,v);
+    }
+}
+

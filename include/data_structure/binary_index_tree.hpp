@@ -1,6 +1,194 @@
 //树状数组 binary index tree -> BIT
+//1. 朴素: 单点修改,区间和查询
+//  1.1 拓展: 区间增加, 单点查询
+//  1.2 
+//2. 单点修改,区间最值
+
+// 使用方式
+// 1 朴素bit, 单点增加,区间求和
+// bit_point_add_range_sum<int,maxn> b1;
+//  - b1.clear() 全部元素置0
+//  - b1.push() 通过push初始化,push之前需要使用set_size(0)
+//  - b1.update(val)
+//  - b1.size() 元素的数量,默认为maxn,只有通过push,或set_size 都可以设置大小
+//  - b1.set_size(val)
+//  - b1.update(pos,add) pos位置增加一个值
+//  - b1.query_pre_sum(pos) 查询前缀和
+//  - b1.query_range(l,r) 查询区间和
+
 #pragma once
 #include "base/macro.hpp"
+
+
+struct binary_index_tree_base_opt {
+
+    //保留最后一位1,清空其它位
+    //也是得到每个点的管辖范围
+    static inline int lowbit(int x) {
+        return x & -x;
+    }
+
+    // alias
+    static constexpr auto mange_range = lowbit;
+
+    //点u的父亲坐标
+    static int fa(int idx) {
+        return idx+mange_range(idx);
+    }
+
+    static int adjacent_left(int idx) {
+        return idx - mange_range(idx);
+    }
+
+    //点idx的孩子坐标,
+    // next返回值为0,表示没有孩子了
+    struct childrens {
+        int fa;
+        int shift; //向左移动的距离
+
+        explicit childrens(int fa)
+        : fa{fa},shift{1}
+        {}
+
+        //返回位置
+        int next() {
+            if( shift < mange_range(fa))
+            {
+                int t = shift;
+                shift<<=1;
+                return fa-t;
+            }
+            return 0;
+        }
+
+        struct Iterator {
+            int fa;
+            int shift; //向左移动的距离
+            int left_;
+            Iterator(int fa)
+            :fa(fa),shift(1),left_(adjacent_left(fa))
+            {
+            }
+            //返回位置
+            int next() {
+                if( shift < mange_range(fa))
+                {
+                    int t = shift;
+                    shift<<=1;
+                    return fa-t;
+                }
+                return 0;
+            }
+
+            int operator*() const {
+                return fa-shift;
+            }
+
+            Iterator& operator++() {
+                int newp = fa - shift;
+                if( newp >  left_)
+                    shift<<=1;
+                return *this;
+            }
+
+            bool operator!=(const int e) {
+                return fa-shift > left_;
+            }
+
+        };
+
+        auto begin()
+        {
+            return Iterator(fa);
+        }
+
+        auto end() const { return 0;}
+    };
+};
+
+template<typename T,std::size_t N=maxn>
+struct binary_index_tree_base_data {
+    T c[maxn];
+
+    binary_index_tree_base_data(){
+        clear();
+    }
+
+    inline void clear() {
+        memset(c,0,sizeof(c));
+    }
+};
+
+
+// 1. 单点增减,区间求和
+template<typename T,std::size_t N=maxn>
+struct bit_point_add_range_sum : 
+    public binary_index_tree_base_data<T,maxn>,
+    public binary_index_tree_base_opt
+{
+
+    std::size_t cnt_;
+
+    using binary_index_tree_base_data<T,maxn>::c;
+    // using binary_index_tree_base_data<T,maxn>::clear;
+
+    bit_point_add_range_sum() 
+        : cnt_{N},binary_index_tree_base_data<T, maxn>()
+    {
+    }
+
+    void clear() {
+        cnt_ = N ;
+        binary_index_tree_base_data<T,maxn>::clear();
+    }
+
+    void set_size(int v) {
+        cnt_ = v;
+    }
+    
+
+    std::size_t size() const { return cnt_; }
+
+    //末尾添加元素
+    void push(T v) {
+        c[++cnt_] = v;
+        auto chs =  childrens(cnt_);
+        // for( int ch = chs.next(); ch !=0 ; ch = chs.next())
+        for( auto ch : chs)
+        {
+            c[cnt_] += c[ch];
+        }
+    }
+
+    //增加间点的值
+    void update_point(int idx,int add)
+    {
+        while( idx <= cnt_) {
+            c[idx] += add;
+            idx = fa(idx);
+        }
+    }
+
+    T query_pre_sum(int idx) {
+        T sum = 0;
+        while( idx > 0) {
+            sum += c[idx];
+            idx = adjacent_left(idx);
+        }
+        return sum;
+    }
+
+    T query_range(int l,int r) {
+        return query_pre_sum(r) - query_pre_sum(l-1);
+    }
+};
+
+
+// 2. 区间增加,单点求值
+// 本质是维护一个差分数组
+// 在差分数组上,区间修改对应修改二个单个点
+// 单个点求和,是求前缀和
+// 直接使用上面的代码就可以了
 
 namespace binary_index_tree {
     int lowbit(int a) { return a & -a; } //每个元素的管辖范围

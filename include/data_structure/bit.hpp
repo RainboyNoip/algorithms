@@ -1,10 +1,11 @@
-//二进制操作
+//二进制操作,使用方法:
+// 求补集:
 #include "base/macro.hpp"
 
 #include <climits>
 // require c++20
 // https://en.cppreference.com/w/cpp/header/bit
-#ifdef __cpp_lib_bitops 
+#ifdef __cpp_lib_bitops
 #include <bit>
 #endif
 
@@ -34,7 +35,6 @@ struct bit_sub_sets {
     struct Iterator {
         T org; // 原数字
         T now; // 现在的数字
-        
 
         bool operator== (const Iterator & oth) const { return now == oth.now;}
         bool operator!= (const Iterator & oth) const { return !(*this == oth);}
@@ -55,43 +55,54 @@ struct bit_sub_sets {
 //表示二进制的类
 template<typename T = unsigned int>
 struct Bit {
+    constexpr static T T1 = 1; // 基础的1
     T num_;
 
     explicit Bit(T v = 0) : num_(v)
     {}
+
+    Bit(const Bit& _bit)
+        :num_(_bit.num_)
+    {}
+
+
+    // 清空
+    void clear() { num_ = 0;}
+
 
     // 转换成 T 类型
     operator T() const { return num_; }
     T to_num() const { return T(*this);}
 
     // 1. 位置i置1
-    Bit & set(int i) { num_ |= (1<<i);  return *this; }
+    Bit & set(int i) { num_ |= (T1<<i);  return *this; }
 
     // 2. 位置i置0
-    Bit & clr(int i) { num_ &= ~(1<<i); return *this;}
+    Bit & clr(int i) { num_ &= ~(T1<<i); return *this;}
 
     // 3. 位置i toggle
-    Bit & toggle(int i)  { num_ ^= (1<< i); return *this;}
+    Bit & toggle(int i)  { num_ ^= (T1<< i); return *this;}
 
     // 4. 使最后连缀i位为1,其它置0
-    Bit & last(int i) { num_ = (1<<i)-1; return *this;}
+    Bit & last(int i) { num_ = (T1<<i)-T1; return *this;}
 
     // 5. 保留最后i位不变,其它置0
-    Bit & keep_last(int i) { num_ &= ((1<<i)-1); return *this;}
+    Bit & keep_last(int i) { num_ &= ((T1<<i)-T1); return *this;}
 
     // 6. 第i位是0还是1
     bool at(int i) {return (num_>>i) & 1;}
 
     // 7. lowbit,保留最后一个1,其它位置0
-    Bit & lowbit(int i ) { num_  &= (-num_); return *this;}
+    Bit & lowbit() { num_  &= (-num_); return *this;}
 
     // 8. 最后一位1置0
-    Bit & clr_last(int i ) { num_ &= (num_-1); return *this;}
+    Bit & clr_last() { num_ &= (num_-T1); return *this;}
 
     // 9. 最后一位1后面有多少个0
-    int countl_zero() const {
+    // 最后一个1的位置
+    int countr_zero() const {
 #ifdef __cpp_lib_bitops
-        return std::countl_zero(num_);
+        return std::countr_zero(num_);
 #else
         if constexpr (std::is_same_v<int, T> || std::is_same_v<T,unsigned int>)
             return __builtin_ctz(num_); // TODO 在clang下测试
@@ -99,15 +110,17 @@ struct Bit {
             return __builtin_ctzll(num_);
 #endif
     }
+
+
     // 10. 计算总共有多少个1
     int pop_count() const {
 #ifdef __cpp_lib_bitops
         return std::popcount(num_);
 #else
     if constexpr (std::is_same_v<int, T> || std::is_same_v<T,unsigned int>)
-        return __builin_popcount(num_);
+        return __builtin_popcount(num_);
     else
-        return __builin_popcountll(num_);
+        return __builtin_popcountll(num_);
 #endif
     }
 
@@ -147,7 +160,8 @@ struct Bit {
 #ifdef __cpp_lib_bitops
     using UT = std::make_unsigned_t<T>;
     return std::numeric_limits<UT>::digits - std::countl_zero(UT(num_)) - 1;
-#elif __has_builtin( __builtin_clz)
+// #elif __has_builtin(__builtin_clz)
+#elif __has_builtin(__builtin_clz)
         // explain: code from here : https://stackoverflow.com/a/40436485
         auto pos = sizeof(T) * CHAR_BIT  -__builtin_clz(num_) -1;
         return pos;
@@ -180,10 +194,34 @@ struct Bit {
 #endif
     }
 
-    auto sub_sets() const // 子集生成
+    bit_sub_sets<T> sub_sets() const // 子集生成
     {
         return bit_sub_sets<T>(num_);
     }
+
+//----------------- operator -----------------
+    Bit operator=(const Bit & oth) {
+        num_ = oth.num_;
+        return *this;
+    }
+
+    Bit operator=(const T & oth) {
+        num_ = oth;
+        return *this;
+    }
+
+    Bit operator|(const Bit & oth) {
+        return Bit(num_ | oth.num_);
+    }
+
+    Bit operator&(const Bit & oth) {
+        return Bit(num_ & oth.num_);
+    }
+
+//----------------- operator END -----------------
+
+
+
 };
 
 template<typename T>

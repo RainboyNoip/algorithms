@@ -1,10 +1,11 @@
 /**
  * 离散化 discretization 
  * 使用方式
- *  - push(v) 添加元素
- *  - clear() 清空
- *  - init() 存完数据,进行离散
- *  - query(int x) 得到原数字x 对应的离散化后的值
+ * 创建变量: discrete disc
+ *  - disc.push(v) 添加元素
+ *  - disc.clear() 清空
+ *  - disc.init() 存完数据,进行离散
+ *  - disc.query(int x) 得到原数字x 对应的离散化后的值
  *
  * TODO 是否不使用stl的函数
  *  - unique
@@ -26,6 +27,11 @@ struct discrete {
 
     void push(int v) { //增加元素
         a[++idx] = v;
+    }
+
+    template<typename ...U>
+    void push(U... v) { //增加元素
+        (push(v),...);
     }
 
     int unique_size () const {

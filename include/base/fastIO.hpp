@@ -139,6 +139,11 @@ struct fast_out : public fast_io_base {
     template<char sep=' '>
     inline void print() {}
 
+
+    //给外界的类使用,特化
+    template<typename T>
+    inline void println(T&);
+
     template<char sep=' '>
     inline void println() {}
 
@@ -266,6 +271,7 @@ struct fast_out : public fast_io_base {
         println<sep>(std::forward<Args>(args)...);
     }
 
+
     template<typename ...Args>
     fast_out & operator()(Args&&... args)
     {
@@ -283,6 +289,14 @@ struct fast_out : public fast_io_base {
         return *this;
     }
 };
+
+
+///--------------- println
+template<>
+void fast_out::println<int>(int & a) {
+    print_one(a);
+    ln();
+}
 
 // template<typename T>
 fast_out & operator<<(fast_out & out,const int & a) {

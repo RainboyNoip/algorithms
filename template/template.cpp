@@ -1,14 +1,18 @@
+// #pragma GCC optimize(2)
 #define __maxn__ 1e6
 #define __maxe__ 2e6
 #include "base.hpp"
-#include "chips/piece.hpp"
-#include "math/fraction.hpp" // 分数类
+#include "chips/upd_max.hpp"
+#include "data_structure/dynamic_array.hpp"
+// #include "math/fraction.hpp" // 分数类
 // #include "graph/linkList.hpp"
 // #include "chips/range.hpp"
 
 #ifdef DEBUG
 #include "utils/clock.hpp"
-#include "utils/log.hpp" 
+#include "utils/log.hpp"
+#else
+#define log(...)
 #endif
 
 //==== 常用宏
@@ -38,6 +42,8 @@ inline void init() {
 
 
 int main(){
+    // std::cin.sync_with_stdio(false);
+    // std::cin.tie(0); std::cout.tie(0);
 #ifdef DEBUG
     Clock t("main time");
 #endif

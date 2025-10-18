@@ -150,28 +150,33 @@ class walk_tree_draw {
          */
         void first_walk(NodePtr u,int level){
             //  set nodeptr value at this level
-            u->left_neighbor = get_prenode_at_level(level);
-            get_prenode_at_level(level) = u;
+            u->left_neighbor = get_prenode_at_level(level); // 得到左相邻结点
+            get_prenode_at_level(level) = u; // 设定父亲
 
-            u->modifier = 0.0f;
+            u->modifier = 0.0f; //修定值
 
             //叶子结点的操作
             if( is_leaf(u) || level == MAXDEP){
-                u->prelim = relative_position(u,0.0f);
+                u->prelim = relative_position(u,0.0f); // 根据u的左兄弟来得到这个结点的prelim值
             }
             else { // 非叶子结点
                 // each_child(u, [this,level](NodePtr u){ first_walk(u, level+1); });
 
-                //递归 walk
+                //递归 first_walk 所有的孩子,得到所有的孩子的信息
                 for( NodePtr t = u->first_child ; t != nullptr ; t = t->right_slibing) {
                     first_walk(t, level+1);
                 }
 
+                //孩子的中间位置
                 double Mid = (u->first_child->prelim + u->last_child->prelim) /2;
                 
                 u->prelim = relative_position(u,Mid);
-                u->modifier = u->prelim -Mid;
-                apportion(u, level);
+                //注意: 这里的modifier 不会修改自己的值,只会去调整孩子的值
+                
+                u->modifier = u->prelim -Mid; // 把孩子调整一自己的下面,使u在孩子中间
+                                              // 注意孩子门之间 已经被first_walk,也就是被调整好了相对的位置
+
+                apportion(u, level);//调整的u为根的整个子树,是整个算法的核心
 
             }
         }
@@ -189,7 +194,7 @@ class walk_tree_draw {
         void apportion(NodePtr u,unsigned int level){
 
             NodePtr LeftMost = u->first_child;
-            NodePtr Neighbor = LeftMost->left_neighbor;
+            NodePtr Neighbor = LeftMost->left_neighbor; // 左邻居,非兄弟
             std::size_t DepthStop = MAXDEP - level;
             std::size_t CompareDepth = 1;
 
@@ -199,8 +204,8 @@ class walk_tree_draw {
             {
                 double leftModSum = 0; // Neighbor的modifier和
                 double rightModSum = 0;// u的leftMost结点的modifier和
-                NodePtr AncestorLeftMost = LeftMost;
-                NodePtr AncestorNeightbor = Neighbor;
+                NodePtr AncestorLeftMost = LeftMost; // 祖先
+                NodePtr AncestorNeightbor = Neighbor; // 祖先
                 //向上求 modifier的和
                 for( int i =0 ;i < CompareDepth ;i++) {
                     AncestorLeftMost = AncestorLeftMost->father;
@@ -340,6 +345,7 @@ class walk_tree_draw {
         }
 
         double relative_position(NodePtr u,double def= 0.0f) {
+            //u的点值,如果有左兄弟,那么就由左兄弟来决定
             if( has_left_sibling(u))
                 return u->left_slibing->prelim 
                         + m_SlibSeparation

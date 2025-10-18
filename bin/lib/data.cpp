@@ -21,7 +21,7 @@ int main(){
     //输出n个点的随机数
     for(int i=1;i<=n;++i){
         out << RND(1,6);
-        out.sp();
+        // out.sp();
     }
     out.ln();
     //输出树

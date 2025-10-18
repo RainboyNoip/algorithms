@@ -38,7 +38,13 @@ struct edge {
 };
 
 namespace std {
-    template <> struct tuple_size<edge> : std::integral_constant<size_t, 2> { };
+    // 为什么只要实现这个东西,就不能decompress呢?
+    // template <> struct tuple_size<edge> : std::integral_constant<size_t, 2> { };
+
+// template<>
+// constexpr int std::tuple_size_v<edge> = 2;
+
+
     template <> struct tuple_element<0,edge> { using type = int; };
     template <> struct tuple_element<1,edge> { using type = int; };
 
