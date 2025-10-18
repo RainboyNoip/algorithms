@@ -10,16 +10,19 @@
 </p>
 
 
-* [目的](#目的)
-* [约定](#约定)
-* [安装与更新](#安装与更新)
-* [文档](#文档)
-* [vim 自动补全](#vim-----)
-  + [0. 安装方法](#0-----)
-  + [1. 单独使用,不依赖其它vim插件](#1-----------vim--)
-  + [2. 配合coc.nvim使用,更好的使用体验](#2---cocnvim----------)
-* [UtilSnips 补全](#utilsnips---)
-* [更新日志](#----)
+- [Algorithms](#algorithms)
+  - [目的](#目的)
+  - [约定](#约定)
+  - [安装与更新](#安装与更新)
+  - [文档](#文档)
+  - [vim 自动补全](#vim-自动补全)
+    - [0. 安装方法](#0-安装方法)
+    - [1. 单独使用,不依赖其它vim插件](#1-单独使用不依赖其它vim插件)
+    - [2. 配合coc.nvim使用,更好的使用体验](#2-配合cocnvim使用更好的使用体验)
+  - [UtilSnips 补全](#utilsnips-补全)
+  - [作为neovim的插件](#作为neovim的插件)
+  - [更新日志](#更新日志)
+  - [TanksFor](#tanksfor)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -167,6 +170,27 @@ let g:global_email = '<your email>'
 ```
 
 [snippets使用文档](./snips.md)
+
+## 作为neovim的插件
+
+本项目可以作为neovim的插件
+
+依赖:
+
+- [lazy.nvim](https://github.com/folke/lazy.nvim)
+- [snacks.nvim](https://github.com/folke/snacks.nvim)
+
+
+```lua
+return  {
+  'RainboyNoip/algorithms'
+  lazy = true,
+  dependencies = { "folke/snacks.nvim" },
+  config = function() {
+    -- todo
+  }
+}
+```
 
 ## 更新日志
 
